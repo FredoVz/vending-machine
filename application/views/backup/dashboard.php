@@ -150,13 +150,13 @@
                 <div class="modal-body">
                     <div class="form-row align-items-center">
                         <div class="col-auto">
-                            <label for="stok" class="col-form-label">Stok</label>
+                            <label for="stok" class="col-form-label">Stok : </label>
                             <span id="stok" class="col-form-label"><?= $vm['stok'] ?></span>
                         </div>
                     </div>
                     <div class="form-row align-items-center mt-1">
                         <div class="col-auto">
-                            <label for="sisa_stok" class="col-form-label">Sisa Stok</label>
+                            <label for="sisa_stok" class="col-form-label">Sisa Stok : </label>
                             <span id="sisa_stok" class="col-form-label"><?= $vm['sisa_stok'] ?></span>
                         </div>
                     </div>

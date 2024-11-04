@@ -35,6 +35,7 @@ class Dashboard extends CI_Controller {
         $qty = $this->input->post('qty');
 
         //echo $qty;
+        //die;
 
         $this->session->set_flashdata('message','<div class="alert alert-success" role="alert">New Qty added!</div>');
         redirect('dashboard');
