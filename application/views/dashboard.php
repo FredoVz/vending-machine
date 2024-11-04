@@ -55,7 +55,7 @@
                                                 <?php echo $vm['cabang']; ?>
                                             </td>
                                             <td scope="row" style="width:33%;">
-                                                <button href="<?= base_url('detail') . $vm['id']; ?>" class="btn btn-primary" data-toggle="modal" data-target="#newDetailModal">Detail</button>
+                                                <button class="btn btn-primary" data-toggle="modal" data-target="#newDetailModal" data-id="<?= $vm['id']; ?>">Detail</button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -163,7 +163,7 @@
                     <td scope="row" style="width:33%;" data-label="vendingMachine">${row.vendingMachine}</td>
                     <td scope="row" style="width:33%;" data-label="cabang">${row.cabang}</td>
                     <td scope="row" style="width:33%;">
-                        <button href="<?= base_url('detail')  . $vm['id']; ?>" class="btn btn-primary" data-toggle="modal" data-target="#newDetailModal">Detail</button>
+                        <button class="btn btn-primary" data-toggle="modal" data-target="#newDetailModal" data-id="<?= $vm['id']; ?>">Detail</button>
                     </td>
                 </tr>
             `);
