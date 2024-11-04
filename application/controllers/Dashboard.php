@@ -18,13 +18,25 @@ class Dashboard extends CI_Controller {
 	public function index()
 	{
         $arrayVM = [
-            ['vendingMachine' => 'Wapo 1', 'cabang' => 'Surabaya'],
-            ['vendingMachine' => 'Wapo 2', 'cabang' => 'Jakarta'],
-            ['vendingMachine' => 'Wapo 3', 'cabang' => 'Malang'],
+            ['id' => '1', 'vendingMachine' => 'Wapo 1', 'cabang' => 'Surabaya', 'stok' => '10', 'sisa_stok' => '5'],
+            ['id' => '2', 'vendingMachine' => 'Wapo 2', 'cabang' => 'Jakarta', 'stok' => '20', 'sisa_stok' => '5'],
+            ['id' => '3', 'vendingMachine' => 'Wapo 3', 'cabang' => 'Malang', 'stok' => '30', 'sisa_stok' => '5'],
         ];
 
         $data = ['arrayVM' => $arrayVM];
 
+        $this->load->view('templates/header');
+        $this->load->view('templates/sidebar');
 		$this->load->view('dashboard', $data);
+        $this->load->view('templates/footer');
 	}
+
+    public function detail(){
+        $qty = $this->input->post('qty');
+
+        //echo $qty;
+
+        $this->session->set_flashdata('message','<div class="alert alert-success" role="alert">New Qty added!</div>');
+        redirect('dashboard');
+    }
 }
