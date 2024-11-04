@@ -55,7 +55,7 @@
                                                 <?php echo $vm['cabang']; ?>
                                             </td>
                                             <td scope="row" style="width:33%;">
-                                                <button class="btn btn-primary" data-toggle="modal" data-target="#newDetailModal" data-id="<?= $vm['id']; ?>">Detail</button>
+                                                <button class="btn btn-primary openDetailModal" data-toggle="modal" data-target="#newDetailModal" data-id="<?= $vm['id']; ?>">Detail</button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -99,13 +99,13 @@
                     <div class="form-row align-items-center">
                         <div class="col-auto">
                             <label for="stok" class="col-form-label">Stok : </label>
-                            <span id="stok" class="col-form-label"><?= $vm['stok'] ?></span>
+                            <span id="stok" class="col-form-label"></span>
                         </div>
                     </div>
                     <div class="form-row align-items-center mt-1">
                         <div class="col-auto">
                             <label for="sisa_stok" class="col-form-label">Sisa Stok : </label>
-                            <span id="sisa_stok" class="col-form-label"><?= $vm['sisa_stok'] ?></span>
+                            <span id="sisa_stok" class="col-form-label"></span>
                         </div>
                     </div>
                     <div class="form-row align-items-center mt-1">
@@ -163,7 +163,7 @@
                     <td scope="row" style="width:33%;" data-label="vendingMachine">${row.vendingMachine}</td>
                     <td scope="row" style="width:33%;" data-label="cabang">${row.cabang}</td>
                     <td scope="row" style="width:33%;">
-                        <button class="btn btn-primary" data-toggle="modal" data-target="#newDetailModal" data-id="<?= $vm['id']; ?>">Detail</button>
+                        <button class="btn btn-primary openDetailModal" data-toggle="modal" data-target="#newDetailModal" data-id="${row.id}">Detail</button>
                     </td>
                 </tr>
             `);
@@ -359,5 +359,21 @@
 
         filteredData = data;  // Initialize filteredData with allData on page load
         refreshTable();
+    });
+</script>
+
+<script>
+    $(document).on('click', '.openDetailModal', function() {
+
+        var id = $(this).data('id');
+        var arrayVM = <?= json_encode($arrayVM); ?>; // Convert array PHP ke JavaScript
+        var data = arrayVM.find(vm => vm.id == id); // Cari data berdasarkan id
+        
+        if (data) {
+            $('#stok').text(data.stok);
+            $('#sisa_stok').text(data.sisa_stok);
+        } else {
+            alert('Data tidak ditemukan.');
+        }
     });
 </script>
