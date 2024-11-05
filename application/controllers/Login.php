@@ -19,21 +19,21 @@ class Login extends CI_Controller {
 
         // Jika form disubmit, lakukan validasi
         if ($this->input->post()) {
-            $username = $this->input->post('username', true);
+            $email = $this->input->post('email', true);
             $password = $this->input->post('password', true);
 
             // Validasi hardcoded
-            if ($username === 'admin' && $password === 'sukses') {
+            if ($email === 'admin@gmail.com' && $password === 'sukses') {
                 // Redirect ke halaman dashboard jika berhasil login
                 // Set session userdata
                 $this->session->set_userdata([
-                    'username' => $username,
+                    'email' => $email,
                     'logged_in' => true // Menandakan user telah login
                 ]);
                 redirect('dashboard');
             } else {
                 // Set flashdata untuk pesan error
-                $this->session->set_flashdata('error', 'Username atau Password salah!');
+                $this->session->set_flashdata('error', 'Akun tidak ditemukan!');
                 redirect('login');
             }
         } else {

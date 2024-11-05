@@ -66,11 +66,11 @@
 
                                 <form method="POST" action="<?php echo base_url('login/index'); ?>" class="user">
                                     <div class="form-group mb-3">
-                                        <label>Username</label>
-                                        <input type="text" class="form-control form-control-user"
+                                        <label>Email</label>
+                                        <input type="email" class="form-control form-control-user"
                                         id="exampleInputEmail" aria-describedby="emailHelp"
-                                        placeholder="" name="username" required>
-                                        <!--?php echo form_error('username', '<div class="text-danger small ml-2">','</div>'); ?-->
+                                        placeholder="" name="email" required>
+                                        <!--?php echo form_error('email', '<div class="text-danger small ml-2">','</div>'); ?-->
                                     </div>
                                     <div class="form-group mb-3">
                                         <label>Password</label>

@@ -36,26 +36,32 @@
                         <table class="table table-bordered table-striped mb-0">
                             <thead id="data-head" style="background-color: orange; position: sticky;">
                                 <tr>
-                                    <th scope="col" style="width:33%;" data-column="vendingMachine">Vending Machine
-                                        <i class="bi bi-caret-down-fill"></i>
+                                    <th scope="col" style="width:25%;" data-column="NoMesin">No Mesin <i 
+                                        class="bi bi-caret-down-fill"></i>
                                     </th>
-                                    <th scope="col" style="width:33%;" data-column="cabang">Cabang <i
-                                            class="bi bi-caret-down-fill"></i></th>
-                                    <th scope="col" style="width:33%;">Action </th>
+                                    <th  scope="col" style="width:25%;" data-column="NamaStaff">Nama Staff <i 
+                                        class="bi bi-caret-down-fill"></i>
+                                    </th>
+                                    <th scope="col" style="width:25%;" data-column="NamaCabang">Nama Cabang <i
+                                        class="bi bi-caret-down-fill"></i></th>
+                                    <th scope="col" style="width:25%;">Action </th>
                                 </tr>
                             </thead>
                             <tbody id="data-body" style="overflow-y: auto;">
                                 <?php if (!empty($arrayVM)): ?>
                                     <?php foreach ($arrayVM as $vm): ?>
                                         <tr>
-                                            <td scope="row" style="width:33%;" data-label="vendingMachine">
-                                                <?php echo $vm['vendingMachine']; ?>
+                                            <td scope="row" style="width:25%;" data-label="NoMesin">
+                                                <?php echo $vm['NoMesin']; ?>
                                             </td>
-                                            <td scope="row" style="width:33%;" data-label="cabang">
-                                                <?php echo $vm['cabang']; ?>
+                                            <td scope="row" style="width:25%;" data-label="NamaStaff">
+                                                <?php echo $vm['NamaStaff']; ?>
                                             </td>
-                                            <td scope="row" style="width:33%;">
-                                                <button class="btn btn-primary openDetailModal" data-toggle="modal" data-target="#newDetailModal" data-id="<?= $vm['id']; ?>">Detail</button>
+                                            <td scope="row" style="width:25%;" data-label="NamaCabang">
+                                                <?php echo $vm['NamaCabang']; ?>
+                                            </td>
+                                            <td scope="row" style="width:25%;">
+                                                <button class="btn btn-primary openDetailModal" data-toggle="modal" data-target="#newDetailModal" data-id="<?= $vm['NoMesin']; ?>">Detail</button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -95,31 +101,20 @@
                 </button>
             </div>
             <form action="<?= base_url('dashboard/detail'); ?>" method="post">
-                <div class="modal-body">
-                    <div class="form-row align-items-center">
-                        <div class="col-auto">
-                            <label for="stok" class="col-form-label">Stok : </label>
-                            <span id="stok" class="col-form-label"></span>
-                        </div>
-                    </div>
-                    <div class="form-row align-items-center mt-1">
-                        <div class="col-auto">
-                            <label for="sisa_stok" class="col-form-label">Sisa Stok : </label>
-                            <span id="sisa_stok" class="col-form-label"></span>
-                        </div>
-                    </div>
-                    <div class="form-row align-items-center mt-1">
-                        <div class="col-auto">
-                            <label for="qty" class="col-form-label">Qty</label>
-                        </div>
-                        <div class="col">
-                            <input type="number" class="form-control" id="qty" name="qty" placeholder="Input qty..." min="0" required>
-                        </div>
-                    </div>
-                </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Add</button>
+                </div>
+
+                <div class="form-row align-items-center mb-5 ml-5">
+                    <div class="col-auto">
+                        <div class="form-check">
+                            <input class="form-check-input col-form-label" type="checkbox">
+                        </div>
+                    </div>
+                </div>
+
+                <div class="modal-body" id="modal-body-content">
                 </div>
             </form>
         </div>
@@ -160,9 +155,10 @@
         paginatedData.forEach(row => {
             $dataBody.append(`
                 <tr>
-                    <td scope="row" style="width:33%;" data-label="vendingMachine">${row.vendingMachine}</td>
-                    <td scope="row" style="width:33%;" data-label="cabang">${row.cabang}</td>
-                    <td scope="row" style="width:33%;">
+                    <td scope="row" style="width:25%;" data-label="NoMesin">${row.NoMesin}</td>
+                    <td scope="row" style="width:25%;" data-label="NamaStaff">${row.NamaStaff}</td>
+                    <td scope="row" style="width:25%;" data-label="NamaCabang">${row.NamaCabang}</td>
+                    <td scope="row" style="width:25%;">
                         <button class="btn btn-primary openDetailModal" data-toggle="modal" data-target="#newDetailModal" data-id="${row.id}">Detail</button>
                     </td>
                 </tr>
@@ -364,14 +360,26 @@
 
 <script>
     $(document).on('click', '.openDetailModal', function() {
+        var id = $(this).data('NoMesin');
+        var arrayDetailVM = <?= json_encode($arrayDetailVM); ?>; // Convert PHP array to JavaScript
+        var filteredData = arrayDetailVM.filter(vm => vm.id == id); // Get all data matching the ID
 
-        var id = $(this).data('id');
-        var arrayVM = <?= json_encode($arrayVM); ?>; // Convert array PHP ke JavaScript
-        var data = arrayVM.find(vm => vm.id == id); // Cari data berdasarkan id
-        
-        if (data) {
-            $('#stok').text(data.stok);
-            $('#sisa_stok').text(data.sisa_stok);
+        var modalContent = '';
+
+        if (filteredData.length > 0) {
+            filteredData.forEach(function(data, index) {
+                modalContent += `
+                    <div class="modal-body-entry">
+                        <h6>Entry ${index + 1}</h6>
+                        <div><strong>Slot:</strong> ${data.Slot}</div>
+                        <div><strong>Stok Akhir:</strong> ${data.StokAkhir}</div>
+                        <div><strong>Nama Barang:</strong> ${data.NamaBarang}</div>
+                        <div><strong>Status Aktif:</strong> ${data.Aktif}</div>
+                        <hr>
+                    </div>
+                `;
+            });
+            $('#modal-body-content').html(modalContent); // Insert the generated content into the modal
         } else {
             alert('Data tidak ditemukan.');
         }
