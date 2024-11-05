@@ -81,7 +81,7 @@
                     </button>
 
                     <div>
-                        <h1>Vending Machine</h1>
+                        <h3>Vending Machine</h3>
                     </div>
 
                     <!-- Topbar Navbar -->
