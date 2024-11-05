@@ -116,6 +116,15 @@
 
                 <div class="modal-body" id="modal-body-content">
                 </div>
+
+                <div class="form-row align-items-center mt-1 mb-5 mr-1 ml-1">
+                    <div class="col-auto">
+                        <label for="qty" class="col-form-label">Qty</label>
+                    </div>
+                    <div class="col">
+                        <input type="number" class="form-control" id="qty" name="qty" placeholder="Input qty..." min="0" required>
+                    </div>
+                </div>
             </form>
         </div>
     </div>
