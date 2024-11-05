@@ -367,6 +367,7 @@
     });
 </script>
 
+<!-- FUNGSI DYNAMIC MODAL -->
 <script>
     $(document).on('click', '.openDetailModal', function() {
         var id = $(this).data('NoMesin');
