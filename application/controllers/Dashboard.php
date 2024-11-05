@@ -27,6 +27,12 @@ class Dashboard extends CI_Controller {
 
         $arrayDetailVM = $this->arrayDetailVM();
 
+        $namaStaff = $arrayDetailVM[0]['NamaStaff'];
+
+        //echo json_encode($arrayDetailVM);
+        //echo $namaStaff;
+        //die;
+
         $arrayVM = [
             [
                 'Cabang' => '00013/01', 
@@ -37,13 +43,13 @@ class Dashboard extends CI_Controller {
                 'LastPing'=> '2024-07-29 11:56:36.760',
                 'StatusVM'=> 'OFF',
                 'SelisihJam'=> '2376',
-                'NamaStaff'=> 'AZIZOMEGASOFT@GMAIL.COM',
             ],
         ];
 
         $data = [
             'arrayVM' => $arrayVM,
             'arrayDetailVM' => $arrayDetailVM,
+            'namaStaff'=> $namaStaff,
         ];
 
         $this->load->view('templates/header');

@@ -55,7 +55,7 @@
                                                 <?php echo $vm['NoMesin']; ?>
                                             </td>
                                             <td scope="row" style="width:25%;" data-label="NamaStaff">
-                                                <?php echo $vm['NamaStaff']; ?>
+                                                <?php echo $arrayDetailVM[0]['NamaStaff']; ?>
                                             </td>
                                             <td scope="row" style="width:25%;" data-label="NamaCabang">
                                                 <?php echo $vm['NamaCabang']; ?>
@@ -143,6 +143,7 @@
     //videos
     //channels
     var data = <?php echo json_encode($arrayVM); ?>;
+    var dataDetail = <?php echo json_encode($arrayDetailVM); ?>;
     var itemsPerPage = 10;
     var currentPage = 1;
     //var filteredData = initialized(data);
@@ -165,7 +166,7 @@
             $dataBody.append(`
                 <tr>
                     <td scope="row" style="width:25%;" data-label="NoMesin">${row.NoMesin}</td>
-                    <td scope="row" style="width:25%;" data-label="NamaStaff">${row.NamaStaff}</td>
+                    <td scope="row" style="width:25%;" data-label="NamaStaff">${dataDetail.0.NamaStaff}</td>
                     <td scope="row" style="width:25%;" data-label="NamaCabang">${row.NamaCabang}</td>
                     <td scope="row" style="width:25%;">
                         <button class="btn btn-primary openDetailModal" data-toggle="modal" data-target="#newDetailModal" data-id="${row.id}">Detail</button>
