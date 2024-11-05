@@ -100,7 +100,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form action="<?= base_url('dashboard/detail'); ?>" method="post">
+            <form  id="detailForm" action="<?= base_url('dashboard/detail'); ?>" method="post">
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Add</button>
@@ -396,6 +396,7 @@ FROM #LastKodeNotaSlotIOT
         var filteredData = arrayDetailVM.filter(vm => vm.id == id); // Get all data matching the ID
 
         var modalContent = '';
+        var hiddenInputs = '';
 
         if (filteredData.length > 0) {
             filteredData.forEach(function(data, index) {
@@ -409,8 +410,19 @@ FROM #LastKodeNotaSlotIOT
                         <hr>
                     </div>
                 `;
+
+                // Create hidden inputs for each data field to be sent to the controller
+                hiddenInputs += `
+                    <input type="hidden" name="details[${index}][Slot]" value="${data.Slot}">
+                    <input type="hidden" name="details[${index}][StokAkhir]" value="${data.StokAkhir}">
+                    <input type="hidden" name="details[${index}][NamaBarang]" value="${data.NamaBarang}">
+                    <input type="hidden" name="details[${index}][Aktif]" value="${data.Aktif}">
+                `;
             });
             $('#modal-body-content').html(modalContent); // Insert the generated content into the modal
+
+            // Append hidden inputs to the form
+            $('#detailForm').append(hiddenInputs);
         } else {
             alert('Data tidak ditemukan.');
         }

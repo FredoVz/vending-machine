@@ -60,7 +60,32 @@ class Dashboard extends CI_Controller {
 
     public function detail(){
 
+        // Retrieve the 'details' array from POST data
+        $details = $this->input->post('details');
         $qty = $this->input->post('qty');
+
+        // Display the array data
+        //echo "<pre>";
+        //print_r($details); // Output the details array for inspection
+        //echo "</pre>";
+
+        // Display the qty value
+        echo "<pre>";
+        echo "Qty: " . $qty;
+        echo "</pre>";
+
+        // Sample SQL query output for demonstration
+        if ($details) {
+            foreach ($details as $detail) {
+                $slot = $detail['Slot'];
+                $stok_akhir = $detail['StokAkhir'];
+                $nama_barang = $detail['NamaBarang'];
+                $status_aktif = $detail['Aktif'];
+
+                echo "INSERT INTO DetailKejadianSlotIOT (KodeNota, $slot, $stok_akhir, PrevStok)
+                SELECT KodeNota, '$slot', '$stok_akhir', 0 FROM #LastKodeNotaSlotIOT;<br>";
+            }
+        }
 
         /*
         -- 4. simpan Opname Slot IOT - di kanan atas saat detail
@@ -83,7 +108,7 @@ class Dashboard extends CI_Controller {
         */
 
         //echo $qty;
-        //die;
+        die;
 
         $this->session->set_flashdata('message','<div class="alert alert-success" role="alert">New Qty added!</div>');
         redirect('dashboard');
