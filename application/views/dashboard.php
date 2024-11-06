@@ -36,14 +36,14 @@
                         <table class="table table-bordered table-striped mb-0">
                             <thead id="data-head" style="background-color: orange; position: sticky;">
                                 <tr>
-                                    <th scope="col" style="width:25%;" data-column="NoMesin">No Mesin <i 
-                                        class="bi bi-caret-down-fill"></i>
+                                    <th scope="col" style="width:25%;" data-column="NoMesin">No Mesin <i
+                                            class="bi bi-caret-down-fill"></i>
                                     </th>
-                                    <th  scope="col" style="width:25%;" data-column="NamaStaff">Nama Staff <i 
-                                        class="bi bi-caret-down-fill"></i>
+                                    <th scope="col" style="width:25%;" data-column="NamaStaff">Nama Staff <i
+                                            class="bi bi-caret-down-fill"></i>
                                     </th>
                                     <th scope="col" style="width:25%;" data-column="NamaCabang">Nama Cabang <i
-                                        class="bi bi-caret-down-fill"></i></th>
+                                            class="bi bi-caret-down-fill"></i></th>
                                     <th scope="col" style="width:25%;">Action </th>
                                 </tr>
                             </thead>
@@ -61,7 +61,9 @@
                                                 <?php echo $vm['NamaCabang']; ?>
                                             </td>
                                             <td scope="row" style="width:25%;">
-                                                <button class="btn btn-primary openDetailModal" data-toggle="modal" data-target="#newDetailModal" data-id="<?= $vm['NoMesin']; ?>">Detail</button>
+                                                <button class="btn btn-primary openDetailModal" data-toggle="modal"
+                                                    data-target="#newDetailModal"
+                                                    data-id="<?= $vm['NoMesin']; ?>">Detail</button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -106,13 +108,13 @@
                     <button type="submit" class="btn btn-primary">Add</button>
                 </div>
 
-                <div class="form-row align-items-center mb-5 ml-5">
+                <div class="form-row align-items-center mb-1 ml-3">
                     <div class="col-auto">
-                        <div class="form-check">
-                            <input class="form-check-input col-form-label" type="checkbox">
-                        </div>
+                        <label class="form-check-label mr-2"><strong>Approve : </strong></label>
+                        <input class="form-check-input col-form-label ml-2" type="checkbox">
                     </div>
                 </div>
+                <hr>
 
                 <div class="modal-body" id="modal-body-content">
                 </div>
@@ -383,7 +385,7 @@ FROM #LastKodeNotaSlotIOT
 
 <!-- FUNGSI DYNAMIC MODAL -->
 <script>
-    $(document).on('click', '.openDetailModal', function() {
+    $(document).on('click', '.openDetailModal', function () {
         var id = $(this).data('NoMesin');
         var arrayDetailVM = <?= json_encode($arrayDetailVM); ?>; // Convert PHP array to JavaScript
         var filteredData = arrayDetailVM.filter(vm => vm.id == id); // Get all data matching the ID
@@ -392,14 +394,26 @@ FROM #LastKodeNotaSlotIOT
         var hiddenInputs = '';
 
         if (filteredData.length > 0) {
-            filteredData.forEach(function(data, index) {
+            filteredData.forEach(function (data, index) {
                 modalContent += `
                     <div class="modal-body-entry">
                         <h6>Entry ${index + 1}</h6>
-                        <div><strong>Slot:</strong> ${data.Slot}</div>
-                        <div><strong>Stok Akhir:</strong> ${data.StokAkhir}</div>
-                        <div><strong>Nama Barang:</strong> ${data.NamaBarang}</div>
-                        <div><strong>Status Aktif:</strong> ${data.Aktif}</div>
+                        <div class="d-flex">
+                            <strong>Slot :</strong>
+                            <div>${data.Slot}</div>
+                        </div>
+                        <div class="d-flex">
+                            <strong>Stok Akhir :</strong>
+                            <div>${data.StokAkhir}</div>
+                        </div>
+                        <div class="d-flex">
+                            <strong>Nama Barang :</strong>
+                            <div>${data.NamaBarang}</div>
+                        </div>
+                        <div class="d-flex">
+                            <strong>Status Aktif :</strong>
+                            <div>${data.Aktif}</div>
+                        </div>
                         <div class="form-row align-items-center mt-1 mb-1 mr-1 ml-1">
                             <div class="col-auto">
                                 <label for="qty" class="col-form-label"><strong>Qty:</strong></label>
