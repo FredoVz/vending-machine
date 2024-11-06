@@ -117,14 +117,7 @@
                 <div class="modal-body" id="modal-body-content">
                 </div>
 
-                <div class="form-row align-items-center mt-1 mb-5 mr-1 ml-1">
-                    <div class="col-auto">
-                        <label for="qty" class="col-form-label">Qty</label>
-                    </div>
-                    <div class="col">
-                        <input type="number" class="form-control" id="qty" name="qty" placeholder="Input qty..." min="0" required>
-                    </div>
-                </div>
+
             </form>
         </div>
     </div>
@@ -407,6 +400,14 @@ FROM #LastKodeNotaSlotIOT
                         <div><strong>Stok Akhir:</strong> ${data.StokAkhir}</div>
                         <div><strong>Nama Barang:</strong> ${data.NamaBarang}</div>
                         <div><strong>Status Aktif:</strong> ${data.Aktif}</div>
+                        <div class="form-row align-items-center mt-1 mb-1 mr-1 ml-1">
+                            <div class="col-auto">
+                                <label for="qty" class="col-form-label"><strong>Qty:</strong></label>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control" id="qty_${index}" name="details[${index}][qty]" placeholder="Input qty..." value="0" min="0">
+                            </div>
+                        </div>
                         <hr>
                     </div>
                 `;
@@ -427,4 +428,16 @@ FROM #LastKodeNotaSlotIOT
             alert('Data tidak ditemukan.');
         }
     });
+
+    /*
+    // Validate qty inputs to prevent negative values
+    $(document).on('input', '.qty-input', function() {
+        if ($(this).val() === '') {
+            $(this).val(0); // Default empty input to 0
+        } else if ($(this).val() < 0) {
+            alert('Qty cannot be negative. Setting to 0.');
+            $(this).val(0); // Reset to 0 if a negative value is entered
+        }
+    });
+    */
 </script>
