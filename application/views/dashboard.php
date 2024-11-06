@@ -100,7 +100,7 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form  id="detailForm" action="<?= base_url('dashboard/detail'); ?>" method="post">
+            <form id="detailForm" action="<?= base_url('dashboard/detail'); ?>" method="post">
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
                     <button type="submit" class="btn btn-primary">Add</button>
