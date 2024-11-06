@@ -17,14 +17,6 @@ class Dashboard extends CI_Controller {
 
 	public function index()
 	{
-            /*
-        $arrayVM = [
-            ['id' => 1, 'vendingMachine' => 'Wapo 1', 'cabang' => 'Surabaya', 'stok' => '10', 'sisa_stok' => '5'],
-            ['id' => 2, 'vendingMachine' => 'Wapo 2', 'cabang' => 'Jakarta', 'stok' => '20', 'sisa_stok' => '10'],
-            ['id' => 3, 'vendingMachine' => 'Wapo 3', 'cabang' => 'Malang', 'stok' => '30', 'sisa_stok' => '15'],
-        ];
-            */
-
         $arrayDetailVM = $this->arrayDetailVM();
 
         $namaStaff = $arrayDetailVM[0]['NamaStaff'];
@@ -65,19 +57,42 @@ class Dashboard extends CI_Controller {
         echo "===TAMPIL DI CONTROLLER===";
         echo "</pre>";
 
+        // Ambil data hidden input dari form header
+        $noMesin = $this->input->post('NoMesin');
+        $namaStaff = $this->input->post('NamaStaff');
+        $namaCabang = $this->input->post('NamaCabang');
+        $cabang = $this->input->post('Cabang');
+
         // Retrieve the 'details' array from POST data
         $details = $this->input->post('details');
-        $qty = $this->input->post('qty');
+        $status_aktif = $details[0]['Aktif'];
+
+        // Ambil nilai 'approve' dari form POST
+        $isApproved = $this->input->post('approve');
+
+        // Format mengikuti database
+        $createBy = $this->formatDatabase($cabang);
+        $operator = $this->formatDatabase($cabang);
+        $approvedBy = $this->formatDatabase($cabang);
 
         // Display the array data
         //echo "<pre>";
         //print_r($details); // Output the details array for inspection
         //echo "</pre>";
 
-        // Display the qty value
-        //echo "<pre>";
-        //echo "Qty: " . $qty;
-        //echo "</pre>";
+        echo "<pre>===Kode Nota===</pre>";
+
+        echo "IF (SELECT OBJECT_ID('tempdb..#LastKodeNotaSlotIOT')) IS NOT NULL DROP TABLE #LastKodeNotaSlotIOT
+        SELECT $cabang+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/'+RIGHT('0000000'+CAST(ISNULL((select top 1 CAST(RIGHT(p.KodeNota,7) AS NUMERIC(8,0)) from MasterKejadianSlotIOT p where p.KodeNota like $cabang+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/%' order by p.KodeNota desc),1) AS VARCHAR),7) KodeNota
+        INTO #LastKodeNotaSlotIOT";
+
+        echo "<pre>===Master===</pre>";
+
+        echo "INSERT INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
+        SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), $noMesin, '', $createBy, GETDATE(), $operator, GETDATE(), $isApproved, $approvedBy, GETDATE(), $cabang
+        FROM #LastKodeNotaSlotIOT";
+
+        echo "<pre>===Details===</pre>";
 
         // Sample SQL query output for demonstration
         if ($details) {
@@ -98,13 +113,30 @@ class Dashboard extends CI_Controller {
                 $query = "INSERT INTO DetailKejadianSlotIOT (KodeNota, Slot, StokAkhir, PrevStok)
                 SELECT KodeNota, '$slot', '$stok_akhir', 0 FROM #LastKodeNotaSlotIOT;<br>";
 
-                echo "<pre>";
-                echo "Qty: " . $qty;
-                echo "</pre>";
+                //echo "<pre>";
+                //echo "Qty: " . $qty;
+                //echo "</pre>";
 
                 echo $query;
             }
         }
+
+        echo "<pre>===Approved===</pre>";
+
+        echo "INSERT INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
+        SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, $operator, GETDATE(), NULL, NULL, 1
+        FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d
+        WHERE m.KodeNota=:kodenotaPoint4
+        AND m.KodeNota=d.KodeNota 
+        AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)
+
+        UPDATE s
+        SET s.StokAkhir=d.StokAkhir, s.Operator=$operator, s.TglEntry=GETDATE() 
+        FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d, SlotIOT s 
+        WHERE m.KodeNota=:kodenotaPoint4
+        AND m.KodeNota=d.KodeNota 
+        AND m.NoMesin=s.NoMesin 
+        AND d.Slot=s.Slot";
 
         /*
         -- 4. simpan Opname Slot IOT - di kanan atas saat detail
@@ -124,6 +156,22 @@ class Dashboard extends CI_Controller {
         INSERT INTO DetailKejadianSlotIOT(KodeNota, Slot, StokAkhir, PrevStok)
         SELECT KodeNota, :Slot, :StokAkhir, 0
         FROM #LastKodeNotaSlotIOT
+
+        -- 5. jika centangan approved, dicentang, maka jalankan ini juga
+        INSERT INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
+        SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, :operator, GETDATE(), NULL, NULL, 1
+        FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d
+        WHERE m.KodeNota=:kodenotaPoint4
+        AND m.KodeNota=d.KodeNota 
+        AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)
+
+        UPDATE s
+        SET s.StokAkhir=d.StokAkhir, s.Operator=:operator, s.TglEntry=GETDATE() 
+        FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d, SlotIOT s 
+        WHERE m.KodeNota=:kodenotaPoint4
+        AND m.KodeNota=d.KodeNota 
+        AND m.NoMesin=s.NoMesin 
+        AND d.Slot=s.Slot
         */
 
         //echo $qty;
@@ -137,10 +185,18 @@ class Dashboard extends CI_Controller {
         */
 
         //Cara 2
+        $data['noMesin'] = $noMesin;
+        $data['namaStaff'] = $namaStaff;
+        $data['namaCabang'] = $namaCabang;
+        $data['cabang'] = $cabang;
+        $data['isApproved'] = $isApproved;
+        $data['createBy'] = $createBy;
+        $data['operator'] = $operator;
+        $data['approvedBy'] = $approvedBy;
         $data['details'] = $details;
         $data['query'] = $query;
         //echo $query;
-        $this->load->view('detail', $data);
+        //$this->load->view('detail', $data);
     }
 
     public function arrayDetailVM(){
@@ -158,7 +214,7 @@ class Dashboard extends CI_Controller {
             ],
             [
                 'NoMesin'=> 'EMULATOR34X2X1',
-                'Slot'=> '1',
+                'Slot'=> '2',
                 'StokAkhir'=> '7,0000',
                 'NamaOperator'=> 'AZIZOMEGASOFT@GMAIL.COM',
                 'TglEntry'=> '2024-07-09 11:09:25.133',
@@ -169,7 +225,7 @@ class Dashboard extends CI_Controller {
             ],
             [
                 'NoMesin'=> 'EMULATOR34X2X1',
-                'Slot'=> '1',
+                'Slot'=> '3',
                 'StokAkhir'=> '7,0000',
                 'NamaOperator'=> 'AZIZOMEGASOFT@GMAIL.COM',
                 'TglEntry'=> '2024-07-09 11:09:25.133',
@@ -203,5 +259,11 @@ class Dashboard extends CI_Controller {
         ];
 
         return $arrayDetailVM;
+    }
+
+    public function formatDatabase($cabang){
+        $format = $cabang . "/01";
+
+        return $format;
     }
 }

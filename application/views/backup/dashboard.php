@@ -15,7 +15,8 @@
             top: 0;
             left: 0;
             right: 0;
-            z-index: 1030; /* 1030 Pastikan di atas konten lainnya */
+            z-index: 1030;
+            /* 1030 Pastikan di atas konten lainnya */
         }
     </style>
 </head>
@@ -23,38 +24,38 @@
 <body>
     <div class="container-fluid">
         <!-- Table to display channels -->
-            <!-- Topbar -->
-            <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow fixed-top-custom">
-                <!-- sticky-top, fixed-top-custom -->
+        <!-- Topbar -->
+        <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow fixed-top-custom">
+            <!-- sticky-top, fixed-top-custom -->
 
-                <div class="mr-5">
-                    <h1>Dashboard</h1>
-                </div>
+            <div class="mr-5">
+                <h1>Dashboard</h1>
+            </div>
 
-                <!-- Topbar Navbar -->
-                <ul class="navbar-nav ml-auto">
+            <!-- Topbar Navbar -->
+            <ul class="navbar-nav ml-auto">
 
-                    <div class="topbar-divider d-none d-sm-block"></div>
+                <div class="topbar-divider d-none d-sm-block"></div>
 
-                    <ul class="na navbar-nav navbar-right d-flex align-items-center">
-                        <?php if ($this->session->userdata('logged_in')) { ?>
-                            <li class="nav-item">
-                                <!--li-->
-                                <div>Selamat Datang, <?php echo $this->session->userdata('username'); ?></div>
-                            </li>
-                            <li class="nav-item ml-2">
-                                <!--li class="ml-2"-->
-                                <?php echo anchor('login/logout', 'Logout', ['class' => 'nav-link']); ?>
-                            </li>
-                        <?php } else { ?>
-                            <li class="nav-item">
-                                <!--li-->
-                                <?php echo anchor('login/index', 'Login', ['class' => 'nav-link']); ?>
-                            </li>
-                        <?php } ?>
-                    </ul>
+                <ul class="na navbar-nav navbar-right d-flex align-items-center">
+                    <?php if ($this->session->userdata('logged_in')) { ?>
+                        <li class="nav-item">
+                            <!--li-->
+                            <div>Selamat Datang, <?php echo $this->session->userdata('username'); ?></div>
+                        </li>
+                        <li class="nav-item ml-2">
+                            <!--li class="ml-2"-->
+                            <?php echo anchor('login/logout', 'Logout', ['class' => 'nav-link']); ?>
+                        </li>
+                    <?php } else { ?>
+                        <li class="nav-item">
+                            <!--li-->
+                            <?php echo anchor('login/index', 'Login', ['class' => 'nav-link']); ?>
+                        </li>
+                    <?php } ?>
                 </ul>
-            </nav>
+            </ul>
+        </nav>
 
         <!-- End of Topbar -->
 
@@ -91,23 +92,34 @@
                             <table class="table table-bordered table-striped mb-0">
                                 <thead id="data-head" style="background-color: orange; position: sticky;">
                                     <tr>
-                                        <th scope="col" style="width:33%;" data-column="vendingMachine">Vending Machine
-                                            <i class="bi bi-caret-down-fill"></i></th>
-                                        <th scope="col" style="width:33%;" data-column="cabang">Cabang <i
+                                        <th scope="col" style="width:25%;" data-column="NoMesin">No Mesin <i
+                                                class="bi bi-caret-down-fill"></i>
+                                        </th>
+                                        <th scope="col" style="width:25%;" data-column="NamaStaff">Nama Staff <i
+                                                class="bi bi-caret-down-fill"></i>
+                                        </th>
+                                        <th scope="col" style="width:25%;" data-column="NamaCabang">Nama Cabang <i
                                                 class="bi bi-caret-down-fill"></i></th>
-                                        <th scope="col" style="width:33%;">Action </th>
+                                        <th scope="col" style="width:25%;">Action </th>
                                     </tr>
                                 </thead>
                                 <tbody id="data-body" style="overflow-y: auto;">
                                     <?php if (!empty($arrayVM)): ?>
                                         <?php foreach ($arrayVM as $vm): ?>
                                             <tr>
-                                                <td scope="row" style="width:33%;" data-label="vendingMachine">
-                                                    <?php echo $vm['vendingMachine']; ?></td>
-                                                <td scope="row" style="width:33%;" data-label="cabang">
-                                                    <?php echo $vm['cabang']; ?></td>
-                                                <td scope="row" style="width:33%;">
-                                                    <button class="btn btn-primary openDetailModal" data-toggle="modal" data-target="#newDetailModal" data-id="<?= $vm['id']; ?>">Detail</button>
+                                                <td scope="row" style="width:25%;" data-label="NoMesin">
+                                                    <?php echo $vm['NoMesin']; ?>
+                                                </td>
+                                                <td scope="row" style="width:25%;" data-label="NamaStaff">
+                                                    <?php echo $vm['Details'][0]['NamaStaff']; ?>
+                                                </td>
+                                                <td scope="row" style="width:25%;" data-label="NamaCabang">
+                                                    <?php echo $vm['NamaCabang']; ?>
+                                                </td>
+                                                <td scope="row" style="width:25%;">
+                                                    <button class="btn btn-primary openDetailModal" data-toggle="modal"
+                                                        data-target="#newDetailModal"
+                                                        data-id="<?= $vm['NoMesin']; ?>">Detail</button>
                                                 </td>
                                             </tr>
                                         <?php endforeach; ?>
@@ -136,47 +148,37 @@
     </div>
 
     <!-- Modal -->
-<div class="modal fade" id="newDetailModal" tabindex="-1" role="dialog" aria-labelledby="newDetailModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newDetailModalLabel">Add New Detail</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
+    <div class="modal fade" id="newDetailModal" tabindex="-1" role="dialog" aria-labelledby="newDetailModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="newDetailModalLabel">Add New Detail</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <form id="detailForm" action="<?= base_url('dashboard/detail'); ?>" method="post">
+                    <div class="modal-footer">
+                        <!--button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button-->
+                        <button type="submit" class="btn btn-primary">Add</button>
+                    </div>
+
+                    <div class="form-row align-items-center mb-1 ml-3">
+                        <div class="col-auto">
+                            <label class="form-check-label mr-2"><strong>Approve : </strong></label>
+                            <input class="form-check-input col-form-label ml-2" type="checkbox" id="approveCheckbox">
+                            <input type="hidden" name="approve" id="approveHidden" value="0">
+                        </div>
+                    </div>
+                    <hr>
+
+                    <div class="modal-body" id="modal-body-content">
+                    </div>
+                </form>
             </div>
-            <form action="<?= base_url('dashboard/detail'); ?>" method="post">
-                <div class="modal-body">
-                    <div class="form-row align-items-center">
-                        <div class="col-auto">
-                            <label for="stok" class="col-form-label">Stok : </label>
-                            <span id="stok" class="col-form-label"></span>
-                        </div>
-                    </div>
-                    <div class="form-row align-items-center mt-1">
-                        <div class="col-auto">
-                            <label for="sisa_stok" class="col-form-label">Sisa Stok : </label>
-                            <span id="sisa_stok" class="col-form-label"></span>
-                        </div>
-                    </div>
-                    <div class="form-row align-items-center mt-1">
-                        <div class="col-auto">
-                            <label for="qty" class="col-form-label">Qty</label>
-                        </div>
-                        <div class="col">
-                            <input type="number" class="form-control" id="qty" name="qty" placeholder="Input qty..." min="0" required>
-                        </div>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </div>
-            </form>
         </div>
     </div>
-</div>
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"
         integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
@@ -414,19 +416,118 @@
         });
     </script>
 
+    <!-- FUNGSI DYNAMIC MODAL -->
     <script>
-        $(document).on('click', '.openDetailModal', function() {
-            var id = $(this).data('id');
-            var arrayVM = <?= json_encode($arrayVM); ?>; // Convert array PHP ke JavaScript
+        $(document).on('click', '.openDetailModal', function () {
+            var id = $(this).data('NoMesin');
+            var arrayVM = <?= json_encode($arrayVM); ?>;
+            var arrayDetailVM = <?= json_encode($arrayDetailVM); ?>; // Convert PHP array to JavaScript
+            var filteredData = arrayDetailVM.filter(vm => vm.id == id); // Get all data matching the ID
 
-            var data = arrayVM.find(vm => vm.id == id); // Cari data berdasarkan id
+            var modalContent = '';
+            var hiddenInputs = '';
 
-            if (data) {
-                $('#stok').text(data.stok);
-                $('#sisa_stok').text(data.sisa_stok);
+            // Filter the corresponding VM for hidden inputs (NoMesin, NamaStaff, NamaCabang)
+            var vmData = arrayVM.find(vm => vm.id == id); // Find matching NoMesin
+            if (vmData) {
+                hiddenInputs += `
+                <input type="hidden" name="NoMesin" value="${vmData.NoMesin}">
+                <input type="hidden" name="NamaStaff" value="${vmData.NamaStaff}">
+                <input type="hidden" name="NamaCabang" value="${vmData.NamaCabang}">
+                <input type="hidden" name="Cabang" value="${vmData.Cabang}">
+            `;
+            }
+
+            // <h6>Entry ${index + 1}</h6>
+            // <div id="stokAkhirDisplay_${index}">${data.StokAkhir}</div>
+
+            if (filteredData.length > 0) {
+                filteredData.forEach(function (data, index) {
+                    // Determine Aktif status
+                    var aktifStatus = data.Aktif == 1 ? 'Aktif' : 'Tidak Aktif';
+
+                    modalContent += `
+                    <div class="modal-body-entry">
+                        <div class="d-flex">
+                            <strong>Slot : </strong> 
+                            <div>${data.Slot}</div>
+                        </div>
+                        <div class="d-flex">
+                            <strong>Nama Barang : </strong> 
+                            <div>${data.NamaBarang}</div>
+                        </div>
+                        <div class="d-flex">
+                            <strong>Stok Akhir : </strong> 
+                            <div>${data.StokAkhir}</div>
+                        </div>
+                        <div class="d-flex">
+                            <strong>Status Aktif : </strong> 
+                            <div>${aktifStatus}</div>
+                        </div>
+                        <div class="form-row align-items-center mt-1 mb-1 mr-1 ml-1">
+                            <div class="col-auto">
+                                <label for="qty" class="col-form-label"><strong>Qty:</strong></label>
+                            </div>
+                            <div class="col">
+                                <input type="number" class="form-control qty-input" id="qty_${index}" name="details[${index}][qty]" placeholder="Input qty..." value="0" min="0" data-index="${index}">
+                            </div>
+                            </div>
+                        </div>
+                        <hr>
+                    </div>
+                `;
+
+                    // Create hidden inputs for each data field to be sent to the controller
+                    hiddenInputs += `
+                    <input type="hidden" name="details[${index}][Slot]" value="${data.Slot}">
+                    <input type="hidden" name="details[${index}][StokAkhir]" id="stokAkhir_${index}" value="${data.StokAkhir}">
+                    <input type="hidden" name="details[${index}][NamaBarang]" value="${data.NamaBarang}">
+                    <input type="hidden" name="details[${index}][Aktif]" value="${data.Aktif}">
+                `;
+                });
+                $('#modal-body-content').html(modalContent); // Insert the generated content into the modal
+
+                // Append hidden inputs to the form
+                $('#detailForm').append(hiddenInputs);
             } else {
                 alert('Data tidak ditemukan.');
             }
+        });
+
+        // Update Stok Akhir based on Qty input
+        $(document).on('input', '.qty-input', function () {
+            var index = $(this).data('index'); // Get the index for this input
+            var qty = parseInt($(this).val()) || 0; // Get the qty value, defaulting to 0 if empty
+
+            // Update hidden input and displayed StokAkhir with the qty value
+            $(`#stokAkhir_${index}`).val(qty);
+            //$(`#stokAkhirDisplay_${index}`).text(qty);
+        });
+    </script>
+
+    <script>
+        /*
+            // Validate qty inputs to prevent negative values
+            $(document).on('input', '.qty-input', function() {
+                if ($(this).val() === '') {
+                    $(this).val(0); // Default empty input to 0
+                } else if ($(this).val() < 0) {
+                    alert('Qty cannot be negative. Setting to 0.');
+                    $(this).val(0); // Reset to 0 if a negative value is entered
+                }
+            });
+        */
+    </script>
+
+    <!-- FUNGSI CENTANG APPROVE DI MODAL -->
+    <script>
+        $(document).ready(function () {
+            $('#approveCheckbox').on('change', function () {
+                // Jika checkbox dicentang, atur hidden input value ke 1
+                $('#approveHidden').val(this.checked ? '1' : '0');
+                //$check = $('#approveHidden').val(this.checked ? '1' : '0');
+            });
+            //console.log($check)
         });
     </script>
 </body>

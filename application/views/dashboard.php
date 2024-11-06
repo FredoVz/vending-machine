@@ -104,22 +104,21 @@
             </div>
             <form id="detailForm" action="<?= base_url('dashboard/detail'); ?>" method="post">
                 <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <!--button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button-->
                     <button type="submit" class="btn btn-primary">Add</button>
                 </div>
 
                 <div class="form-row align-items-center mb-1 ml-3">
                     <div class="col-auto">
                         <label class="form-check-label mr-2"><strong>Approve : </strong></label>
-                        <input class="form-check-input col-form-label ml-2" type="checkbox">
+                        <input class="form-check-input col-form-label ml-2" type="checkbox" id="approveCheckbox">
+                        <input type="hidden" name="approve" id="approveHidden" value="0">
                     </div>
                 </div>
                 <hr>
 
                 <div class="modal-body" id="modal-body-content">
                 </div>
-
-
             </form>
         </div>
     </div>
@@ -387,39 +386,57 @@ FROM #LastKodeNotaSlotIOT
 <script>
     $(document).on('click', '.openDetailModal', function () {
         var id = $(this).data('NoMesin');
+        var arrayVM = <?= json_encode($arrayVM); ?>;
         var arrayDetailVM = <?= json_encode($arrayDetailVM); ?>; // Convert PHP array to JavaScript
         var filteredData = arrayDetailVM.filter(vm => vm.id == id); // Get all data matching the ID
 
         var modalContent = '';
         var hiddenInputs = '';
 
+        // Filter the corresponding VM for hidden inputs (NoMesin, NamaStaff, NamaCabang)
+        var vmData = arrayVM.find(vm => vm.id == id); // Find matching NoMesin
+        if (vmData) {
+            hiddenInputs += `
+                <input type="hidden" name="NoMesin" value="${vmData.NoMesin}">
+                <input type="hidden" name="NamaStaff" value="${vmData.NamaStaff}">
+                <input type="hidden" name="NamaCabang" value="${vmData.NamaCabang}">
+                <input type="hidden" name="Cabang" value="${vmData.Cabang}">
+            `;
+        }
+
+        // <h6>Entry ${index + 1}</h6>
+        // <div id="stokAkhirDisplay_${index}">${data.StokAkhir}</div>
+
         if (filteredData.length > 0) {
             filteredData.forEach(function (data, index) {
+                // Determine Aktif status
+                var aktifStatus = data.Aktif == 1 ? 'Aktif' : 'Tidak Aktif';
+
                 modalContent += `
                     <div class="modal-body-entry">
-                        <h6>Entry ${index + 1}</h6>
                         <div class="d-flex">
-                            <strong>Slot :</strong>
+                            <strong>Slot : </strong> 
                             <div>${data.Slot}</div>
                         </div>
                         <div class="d-flex">
-                            <strong>Stok Akhir :</strong>
-                            <div>${data.StokAkhir}</div>
-                        </div>
-                        <div class="d-flex">
-                            <strong>Nama Barang :</strong>
+                            <strong>Nama Barang : </strong> 
                             <div>${data.NamaBarang}</div>
                         </div>
                         <div class="d-flex">
-                            <strong>Status Aktif :</strong>
-                            <div>${data.Aktif}</div>
+                            <strong>Stok Akhir : </strong> 
+                            <div>${data.StokAkhir}</div>
+                        </div>
+                        <div class="d-flex">
+                            <strong>Status Aktif : </strong> 
+                            <div>${aktifStatus}</div>
                         </div>
                         <div class="form-row align-items-center mt-1 mb-1 mr-1 ml-1">
                             <div class="col-auto">
                                 <label for="qty" class="col-form-label"><strong>Qty:</strong></label>
                             </div>
                             <div class="col">
-                                <input type="number" class="form-control" id="qty_${index}" name="details[${index}][qty]" placeholder="Input qty..." value="0" min="0">
+                                <input type="number" class="form-control qty-input" id="qty_${index}" name="details[${index}][qty]" placeholder="Input qty..." value="0" min="0" data-index="${index}">
+                            </div>
                             </div>
                         </div>
                         <hr>
@@ -429,7 +446,7 @@ FROM #LastKodeNotaSlotIOT
                 // Create hidden inputs for each data field to be sent to the controller
                 hiddenInputs += `
                     <input type="hidden" name="details[${index}][Slot]" value="${data.Slot}">
-                    <input type="hidden" name="details[${index}][StokAkhir]" value="${data.StokAkhir}">
+                    <input type="hidden" name="details[${index}][StokAkhir]" id="stokAkhir_${index}" value="${data.StokAkhir}">
                     <input type="hidden" name="details[${index}][NamaBarang]" value="${data.NamaBarang}">
                     <input type="hidden" name="details[${index}][Aktif]" value="${data.Aktif}">
                 `;
@@ -443,15 +460,25 @@ FROM #LastKodeNotaSlotIOT
         }
     });
 
-    /*
-    // Validate qty inputs to prevent negative values
-    $(document).on('input', '.qty-input', function() {
-        if ($(this).val() === '') {
-            $(this).val(0); // Default empty input to 0
-        } else if ($(this).val() < 0) {
-            alert('Qty cannot be negative. Setting to 0.');
-            $(this).val(0); // Reset to 0 if a negative value is entered
-        }
+    // Update Stok Akhir based on Qty input
+    $(document).on('input', '.qty-input', function () {
+        var index = $(this).data('index'); // Get the index for this input
+        var qty = parseInt($(this).val()) || 0; // Get the qty value, defaulting to 0 if empty
+
+        // Update hidden input and displayed StokAkhir with the qty value
+        $(`#stokAkhir_${index}`).val(qty);
+        //$(`#stokAkhirDisplay_${index}`).text(qty);
     });
-    */
+</script>
+
+<!-- FUNGSI CENTANG APPROVE DI MODAL -->
+<script>
+    $(document).ready(function () {
+        $('#approveCheckbox').on('change', function () {
+            // Jika checkbox dicentang, atur hidden input value ke 1
+            $('#approveHidden').val(this.checked ? '1' : '0');
+            //$check = $('#approveHidden').val(this.checked ? '1' : '0');
+        });
+        //console.log($check)
+    });
 </script>
