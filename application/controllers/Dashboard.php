@@ -43,6 +43,7 @@ class Dashboard extends CI_Controller {
                 'LastPing'=> '2024-07-29 11:56:36.760',
                 'StatusVM'=> 'OFF',
                 'SelisihJam'=> '2376',
+                'Details'=> $arrayDetailVM,
             ],
         ];
 
