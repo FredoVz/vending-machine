@@ -83,8 +83,13 @@ class Dashboard extends CI_Controller {
                 $nama_barang = $detail['NamaBarang'];
                 $status_aktif = $detail['Aktif'];
 
-                echo "INSERT INTO DetailKejadianSlotIOT (KodeNota, $slot, $stok_akhir, PrevStok)
+                //echo "INSERT INTO DetailKejadianSlotIOT (KodeNota, $slot, $stok_akhir, PrevStok)
+                //SELECT KodeNota, '$slot', '$stok_akhir', 0 FROM #LastKodeNotaSlotIOT;<br>";
+
+                $query = "INSERT INTO DetailKejadianSlotIOT (KodeNota, $slot, $stok_akhir, PrevStok)
                 SELECT KodeNota, '$slot', '$stok_akhir', 0 FROM #LastKodeNotaSlotIOT;<br>";
+
+                echo $query;
             }
         }
 
@@ -109,10 +114,21 @@ class Dashboard extends CI_Controller {
         */
 
         //echo $qty;
+
+        //Cara 1
+        /*
         die;
 
         $this->session->set_flashdata('message','<div class="alert alert-success" role="alert">New Qty added!</div>');
         redirect('dashboard');
+        */
+
+        //Cara 2
+        $data['details'] = $details;
+        $data['qty'] = $qty;
+        $data['query'] = $query;
+        //echo $query;
+        $this->load->view('detail', $data);
     }
 
     public function arrayDetailVM(){
