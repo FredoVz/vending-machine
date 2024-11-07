@@ -36,34 +36,44 @@
                         <table class="table table-bordered table-striped mb-0">
                             <thead id="data-head" style="background-color: orange; position: sticky;">
                                 <tr>
-                                    <th scope="col" style="width:25%;" data-column="NoMesin">No Mesin <i
-                                            class="bi bi-caret-down-fill"></i>
-                                    </th>
-                                    <th scope="col" style="width:25%;" data-column="NamaStaff">Nama Staff <i
+                                    <th scope="col" style="width:25%;" data-column="Cabang">Cabang <i
                                             class="bi bi-caret-down-fill"></i>
                                     </th>
                                     <th scope="col" style="width:25%;" data-column="NamaCabang">Nama Cabang <i
                                             class="bi bi-caret-down-fill"></i></th>
+                                    <th scope="col" style="width:25%;" data-column="StatusVM">Status <i
+                                            class="bi bi-caret-down-fill"></i>
+                                    </th>
                                     <th scope="col" style="width:25%;">Action </th>
                                 </tr>
                             </thead>
+                            <!-- data-nama-staff="< ?= $vm['NamaStaff']; ?>" -->
                             <tbody id="data-body" style="overflow-y: auto;">
                                 <?php if (!empty($arrayVM)): ?>
                                     <?php foreach ($arrayVM as $vm): ?>
                                         <tr>
-                                            <td scope="row" style="width:25%;" data-label="NoMesin">
-                                                <?php echo $vm['NoMesin']; ?>
+                                            <td scope="row" style="width:25%;" data-label="Cabang">
+                                                <?php echo $vm['Cabang']; ?>
                                             </td>
-                                            <td scope="row" style="width:25%;" data-label="NamaStaff">
-                                                <?php echo $vm['Details'][0]['NamaStaff']; ?>
-                                            </td>
+
                                             <td scope="row" style="width:25%;" data-label="NamaCabang">
                                                 <?php echo $vm['NamaCabang']; ?>
                                             </td>
+                                            <td scope="row" style="width:25%;" data-label="StatusVM">
+                                                <?php echo $vm['StatusVM']; ?>
+                                            </td>
                                             <td scope="row" style="width:25%;">
-                                                <button class="btn btn-primary openDetailModal" data-toggle="modal"
-                                                    data-target="#newDetailModal"
-                                                    data-id="<?= $vm['NoMesin']; ?>">Detail</button>
+                                            <button 
+                                                class="btn btn-primary openDetailModal" 
+                                                data-toggle="modal"
+                                                data-target="#newDetailModal"
+                                                data-no-mesin="<?= $vm['NoMesin']; ?>"
+                                                data-nama-staff="<?= $arrayDetailVM[0]['NamaStaff']; ?>"
+                                                data-nama-cabang="<?= $vm['NamaCabang']; ?>"
+                                                data-cabang="<?= $vm['Cabang']; ?>"
+                                            >
+                                                Detail
+                                            </button>
                                             </td>
                                         </tr>
                                     <?php endforeach; ?>
@@ -107,15 +117,20 @@
                     <!--button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button-->
                     <button type="submit" class="btn btn-primary">Add</button>
                 </div>
+                
+                <div class="modal-header" style="display: flex; flex-direction: column; align-items: flex-start;">
+                    <div id="header-content" style="margin-bottom: 1rem;">
+                        <!-- Dynamic Header Content Will Appear Here -->
+                    </div>
 
-                <div class="form-row align-items-center mb-1 ml-3">
-                    <div class="col-auto">
-                        <label class="form-check-label mr-2"><strong>Approve : </strong></label>
-                        <input class="form-check-input col-form-label ml-2" type="checkbox" id="approveCheckbox">
-                        <input type="hidden" name="approve" id="approveHidden" value="0">
+                    <div class="form-row align-items-center mb-1" style="display: flex; align-items: center;">
+                        <div class="col-auto">
+                            <label class="form-check-label mr-2"><strong>Approve : </strong></label>
+                            <input class="form-check-input col-form-label ml-2" type="checkbox" id="approveCheckbox">
+                            <input type="hidden" name="approve" id="approveHidden" value="0">
+                        </div>
                     </div>
                 </div>
-                <hr>
 
                 <div class="modal-body" id="modal-body-content">
                 </div>
@@ -134,8 +149,6 @@
     crossorigin="anonymous"></script>
 <!-- JavaScript -->
 <script>
-    //videos
-    //channels
     var data = <?php echo json_encode($arrayVM); ?>;
     var dataDetail = <?php echo json_encode($arrayDetailVM); ?>;
     var itemsPerPage = 10;
@@ -159,11 +172,18 @@
         paginatedData.forEach(row => {
             $dataBody.append(`
                 <tr>
-                    <td scope="row" style="width:25%;" data-label="NoMesin">${row.NoMesin}</td>
-                    <td scope="row" style="width:25%;" data-label="NamaStaff">${row.Details[0].NamaStaff}</td>
+                    <td scope="row" style="width:25%;" data-label="Cabang">${row.Cabang}</td>
                     <td scope="row" style="width:25%;" data-label="NamaCabang">${row.NamaCabang}</td>
+                    <td scope="row" style="width:25%;" data-label="NamaStaff">${row.StatusVM}</td>
                     <td scope="row" style="width:25%;">
-                        <button class="btn btn-primary openDetailModal" data-toggle="modal" data-target="#newDetailModal" data-id="${row.id}">Detail</button>
+                        <button class="btn btn-primary openDetailModal" 
+                        data-toggle="modal" 
+                        data-target="#newDetailModal"                                                 
+                            data-no-mesin="${row.NoMesin}"
+                            data-nama-staff="${dataDetail[0].NamaStaff}"
+                            data-nama-cabang="${row.NamaCabang}"
+                            data-cabang="${row.Cabang}"
+                            >Detail</button>
                     </td>
                 </tr>
             `);
@@ -362,50 +382,65 @@
     });
 </script>
 
-<!-- 
--- 4. simpan Opname Slot IOT - di kanan atas saat detail
---dapetin kodenota
-IF (SELECT OBJECT_ID('tempdb..#LastKodeNotaSlotIOT')) IS NOT NULL DROP TABLE #LastKodeNotaSlotIOT
-SELECT :branch+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/'+RIGHT('0000000'+CAST(ISNULL((select top 1 CAST(RIGHT(p.KodeNota,7) AS NUMERIC(8,0)) from MasterKejadianSlotIOT p where p.KodeNota like :branch+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/%' order by p.KodeNota desc),1) AS VARCHAR),7) KodeNota
-INTO #LastKodeNotaSlotIOT
+<!-- FUNGSI DYNAMIC MODAL HEADER -->
+<script>
+    $(document).ready(function() {
+        $(".openDetailModal").on("click", function() {
+            //console.log("Button clicked!");
 
---insert master
-INSERT INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
-SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), :NoMesin, :Keterangan, :CreateBy, GETDATE(), :Operator, GETDATE(), :IsApproved, :ApprovedBy, :ApprovedDate, :Cabang
-FROM #LastKodeNotaSlotIOT
+            // Get data dari atribut button
+            var noMesin = $(this).data("no-mesin");
+            var namaStaff = $(this).data("nama-staff");
+            var namaCabang = $(this).data("nama-cabang");
+            var cabang = $(this).data("cabang");
 
---untuk isapproved ini akan 1 atau 0 tergantung centangan Approved, dan ApprovedBy dan ApprovedDate akan ada isi kalau dicentang
+            // Debugging untuk melihat data yang diambil
+            //console.log("No Mesin:", noMesin);
+            //console.log("Nama Staff:", namaStaff);
+            //console.log("Nama Cabang:", namaCabang);
 
---insert detail, ini di looping sebanyak detail slot nya
-INSERT INTO DetailKejadianSlotIOT(KodeNota, Slot, StokAkhir, PrevStok)
-SELECT KodeNota, :Slot, :StokAkhir, 0
-FROM #LastKodeNotaSlotIOT
--->
+            // Membuat header content
+            var headerContent = `
+            <div class="modal-header-entry">
+                <div class="d-flex">
+                    <strong>No Mesin : </strong> 
+                    <div>${noMesin}</div>
+                </div>
+                <div class="d-flex">
+                    <strong>Nama Staff:</strong> 
+                    <div>${namaStaff}</div>
+                </div>
+                <div class="d-flex">
+                    <strong>Nama Cabang : </strong> 
+                    <div>${namaCabang}</div>
+                </div>
+            </div>
+            `;
 
-<!-- FUNGSI DYNAMIC MODAL -->
+            var hiddenInputs = `
+                <input type="hidden" name="NoMesin" value="${noMesin}">
+                <input type="hidden" name="NamaStaff" value="${namaStaff}">
+                <input type="hidden" name="NamaCabang" value="${namaCabang}">
+                <input type="hidden" name="Cabang" value="${cabang}">
+            `;
+
+            // Memasukkan header content ke modal
+            $("#header-content").html(headerContent);
+
+            //$("#detailForm input[type='hidden']").remove();
+            $('#detailForm').append(hiddenInputs);
+        });
+    });
+</script>
+
+<!-- FUNGSI DYNAMIC MODAL BODY -->
 <script>
     $(document).on('click', '.openDetailModal', function () {
         var id = $(this).data('NoMesin');
-        var arrayVM = <?= json_encode($arrayVM); ?>;
         var arrayDetailVM = <?= json_encode($arrayDetailVM); ?>; // Convert PHP array to JavaScript
         var filteredData = arrayDetailVM.filter(vm => vm.id == id); // Get all data matching the ID
-
         var modalContent = '';
         var hiddenInputs = '';
-
-        // Filter the corresponding VM for hidden inputs (NoMesin, NamaStaff, NamaCabang)
-        var vmData = arrayVM.find(vm => vm.id == id); // Find matching NoMesin
-        if (vmData) {
-            hiddenInputs += `
-                <input type="hidden" name="NoMesin" value="${vmData.NoMesin}">
-                <input type="hidden" name="NamaStaff" value="${vmData.NamaStaff}">
-                <input type="hidden" name="NamaCabang" value="${vmData.NamaCabang}">
-                <input type="hidden" name="Cabang" value="${vmData.Cabang}">
-            `;
-        }
-
-        // <h6>Entry ${index + 1}</h6>
-        // <div id="stokAkhirDisplay_${index}">${data.StokAkhir}</div>
 
         if (filteredData.length > 0) {
             filteredData.forEach(function (data, index) {
