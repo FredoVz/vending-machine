@@ -112,23 +112,26 @@
                     <span aria-hidden="true">&times;</span>
                 </button>
             </div>
-            <form id="detailForm" action="<?= base_url('dashboard/detail'); ?>" method="post">
-                <div class="modal-footer">
-                    <!--button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button-->
-                    <button type="submit" class="btn btn-primary">Add</button>
-                </div>
-                
-                <div class="modal-header" style="display: flex; flex-direction: column; align-items: flex-start;">
-                    <div id="header-content" style="margin-bottom: 1rem;">
-                        <!-- Dynamic Header Content Will Appear Here -->
+            <form id="detailForm" action="<?= base_url('detail'); ?>" method="post">
+
+                <div class="modal-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
+                    <div style="display: flex; flex-direction: column;">
+                        <div id="header-content" style="margin-bottom: 1rem;">
+                            <!-- Dynamic Header Content Will Appear Here -->
+                        </div>
+
+                        <div class="form-row align-items-center mb-1" style="display: flex; align-items: center;">
+                            <div class="col-auto">
+                                <label class="form-check-label mr-2"><strong>Approve :</strong></label>
+                                <input class="form-check-input col-form-label ml-2" type="checkbox" id="approveCheckbox">
+                                <input type="hidden" name="approve" id="approveHidden" value="0">
+                            </div>
+                        </div>
                     </div>
 
-                    <div class="form-row align-items-center mb-1" style="display: flex; align-items: center;">
-                        <div class="col-auto">
-                            <label class="form-check-label mr-2"><strong>Approve : </strong></label>
-                            <input class="form-check-input col-form-label ml-2" type="checkbox" id="approveCheckbox">
-                            <input type="hidden" name="approve" id="approveHidden" value="0">
-                        </div>
+                    <div class="modal-footer" style="margin-left: auto;">
+                        <!--button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button-->
+                        <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </div>
 
@@ -437,8 +440,9 @@
 <script>
     $(document).on('click', '.openDetailModal', function () {
         var id = $(this).data('NoMesin');
-        var arrayDetailVM = <?= json_encode($arrayDetailVM); ?>; // Convert PHP array to JavaScript
-        var filteredData = arrayDetailVM.filter(vm => vm.id == id); // Get all data matching the ID
+        var resDetails = <?= json_encode($arrayDetailVM); ?>; // Convert PHP array to JavaScript
+        console.log(resDetails);
+        var filteredData = resDetails.filter(vm => vm.id == id); // Get all data matching the ID
         var modalContent = '';
         var hiddenInputs = '';
 
@@ -447,22 +451,26 @@
                 // Determine Aktif status
                 var aktifStatus = data.Aktif == 1 ? 'Aktif' : 'Tidak Aktif';
 
+                // Convert StokAkhir to integer, or set to 0 if NaN
+                var stokAkhir = parseInt(data.StokAkhir);
+                var formattedStokAkhir = isNaN(stokAkhir) ? '0' : stokAkhir.toLocaleString();
+
                 modalContent += `
                     <div class="modal-body-entry">
                         <div class="d-flex">
-                            <strong>Slot : </strong> 
+                            <strong>Slot : </strong>
                             <div>${data.Slot}</div>
                         </div>
                         <div class="d-flex">
-                            <strong>Nama Barang : </strong> 
+                            <strong>Nama Barang : </strong>
                             <div>${data.NamaBarang}</div>
                         </div>
                         <div class="d-flex">
-                            <strong>Stok Akhir : </strong> 
-                            <div>${data.StokAkhir}</div>
+                            <strong>Stok Akhir : </strong>
+                            <div>${formattedStokAkhir}</div>
                         </div>
                         <div class="d-flex">
-                            <strong>Status Aktif : </strong> 
+                            <strong>Status : </strong>
                             <div>${aktifStatus}</div>
                         </div>
                         <div class="form-row align-items-center mt-1 mb-1 mr-1 ml-1">
@@ -481,7 +489,7 @@
                 // Create hidden inputs for each data field to be sent to the controller
                 hiddenInputs += `
                     <input type="hidden" name="details[${index}][Slot]" value="${data.Slot}">
-                    <input type="hidden" name="details[${index}][StokAkhir]" id="stokAkhir_${index}" value="${data.StokAkhir}">
+                    <input type="hidden" name="details[${index}][StokAkhir]" id="stokAkhir_${index}" value="${formattedStokAkhir}">
                     <input type="hidden" name="details[${index}][NamaBarang]" value="${data.NamaBarang}">
                     <input type="hidden" name="details[${index}][Aktif]" value="${data.Aktif}">
                 `;

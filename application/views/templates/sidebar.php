@@ -117,7 +117,7 @@
                             <?php if ($this->session->userdata('logged_in')) { ?>
                                 <li class="nav-item">
                                 <!--li-->
-                                    <div>Selamat Datang, admin<!--?php echo $this->session->userdata('username'); ?--></div>
+                                    <div>Selamat Datang, <?php echo $this->session->userdata('email'); ?></div>
                                 </li>
                                 <li class="nav-item ml-2">
                                 <!--li class="ml-2"-->

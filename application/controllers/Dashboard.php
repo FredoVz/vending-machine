@@ -25,9 +25,11 @@ class Dashboard extends CI_Controller {
         //echo $namaStaff;
         //die;
 
+        $cabang = $this->session->userdata('branch');
+
         $arrayVM = [
             [
-                'Cabang' => '00013/01', 
+                'Cabang' => $cabang,
                 'NamaCabang' => 'OMEGA KOPERASI', 
                 'AlamatHeader' => '10', 
                 'KotaHeader' => '',
@@ -37,14 +39,24 @@ class Dashboard extends CI_Controller {
                 'SelisihJam'=> '2376',
             ],
             [
-                'Cabang' => '00013/02', 
+                'Cabang' => $cabang,
                 'NamaCabang' => 'OMEGA KOPERASI', 
                 'AlamatHeader' => '12', 
                 'KotaHeader' => '',
                 'NoMesin'=> 'EMULATOR34X2X2',
                 'LastPing'=> '2024-07-29 11:56:36.762',
                 'StatusVM'=> 'OFF',
-                'SelisihJam'=> '2376',
+                'SelisihJam'=> '2377',
+            ],
+            [
+                'Cabang' => $cabang,
+                'NamaCabang' => 'OMEGA KOPERASI', 
+                'AlamatHeader' => '13', 
+                'KotaHeader' => '',
+                'NoMesin'=> 'EMULATOR34X2X3',
+                'LastPing'=> '2024-07-29 11:56:36.763',
+                'StatusVM'=> 'OFF',
+                'SelisihJam'=> '2378',
             ],
         ];
 
@@ -60,7 +72,7 @@ class Dashboard extends CI_Controller {
         $this->load->view('templates/footer');
 	}
 
-    public function detail(){
+    public function details(){
 
         echo "<pre>";
         echo "===TAMPIL DI CONTROLLER===";
@@ -92,13 +104,13 @@ class Dashboard extends CI_Controller {
         echo "<pre>===Kode Nota===</pre>";
 
         echo "IF (SELECT OBJECT_ID('tempdb..#LastKodeNotaSlotIOT')) IS NOT NULL DROP TABLE #LastKodeNotaSlotIOT
-        SELECT $cabang+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/'+RIGHT('0000000'+CAST(ISNULL((select top 1 CAST(RIGHT(p.KodeNota,7) AS NUMERIC(8,0)) from MasterKejadianSlotIOT p where p.KodeNota like $cabang+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/%' order by p.KodeNota desc),1) AS VARCHAR),7) KodeNota
+        SELECT '".$cabang."'+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/'+RIGHT('0000000'+CAST(ISNULL((select top 1 CAST(RIGHT(p.KodeNota,7) AS NUMERIC(8,0)) from MasterKejadianSlotIOT p where p.KodeNota like '".$cabang."'+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/%' order by p.KodeNota desc),1) AS VARCHAR),7) KodeNota
         INTO #LastKodeNotaSlotIOT";
 
         echo "<pre>===Master===</pre>";
 
-        echo "INSERT INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
-        SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), $noMesin, '', $createBy, GETDATE(), $operator, GETDATE(), $isApproved, $approvedBy, GETDATE(), $cabang
+        echo "insert INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
+        SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), '".$noMesin."', '', '".$createBy."', GETDATE(), '".$operator."', GETDATE(), '".$isApproved."', '".$approvedBy."', GETDATE(), '".$cabang."'
         FROM #LastKodeNotaSlotIOT";
 
         echo "<pre>===Details===</pre>";
@@ -116,10 +128,10 @@ class Dashboard extends CI_Controller {
                 $status_aktif = $detail['Aktif'];
                 $qty = $detail['qty'];
 
-                //echo "INSERT INTO DetailKejadianSlotIOT (KodeNota, $slot, $stok_akhir, PrevStok)
+                //echo "insert INTO DetailKejadianSlotIOT (KodeNota, $slot, $stok_akhir, PrevStok)
                 //SELECT KodeNota, '$slot', '$stok_akhir', 0 FROM #LastKodeNotaSlotIOT;<br>";
 
-                $query = "INSERT INTO DetailKejadianSlotIOT (KodeNota, Slot, StokAkhir, PrevStok)
+                $query = "insert INTO DetailKejadianSlotIOT (KodeNota, Slot, StokAkhir, PrevStok)
                 SELECT KodeNota, '$slot', '$stok_akhir', 0 FROM #LastKodeNotaSlotIOT;<br>";
 
                 //echo "<pre>";
@@ -132,15 +144,15 @@ class Dashboard extends CI_Controller {
 
         echo "<pre>===Approved===</pre>";
 
-        echo "INSERT INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
-        SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, $operator, GETDATE(), NULL, NULL, 1
+        echo "insert INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
+        SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, '".$operator."', GETDATE(), NULL, NULL, 1
         FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d
         WHERE m.KodeNota=:kodenotaPoint4
         AND m.KodeNota=d.KodeNota 
         AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)
 
         UPDATE s
-        SET s.StokAkhir=d.StokAkhir, s.Operator=$operator, s.TglEntry=GETDATE() 
+        SET s.StokAkhir=d.StokAkhir, s.Operator='".$operator."', s.TglEntry=GETDATE() 
         FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d, SlotIOT s 
         WHERE m.KodeNota=:kodenotaPoint4
         AND m.KodeNota=d.KodeNota 
