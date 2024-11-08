@@ -38,7 +38,6 @@ class Detail extends CI_Controller
 		$isApproved = $this->input->post('approve');
 
 		// Format mengikuti database
-		$cabang1 = $this->formatDatabase($cabang);
 		$createBy = $this->formatDatabase($cabang);
 		$operator = $this->formatDatabase($cabang);
 		$approvedBy = $this->formatDatabase($cabang);
@@ -50,15 +49,33 @@ class Detail extends CI_Controller
 
 		echo "<pre>===Kode Nota===</pre>";
 
-		echo "IF (SELECT OBJECT_ID('tempdb..#LastKodeNotaSlotIOT')) IS NOT NULL DROP TABLE #LastKodeNotaSlotIOT
+		$queryGetKode = "IF (SELECT OBJECT_ID('tempdb..#LastKodeNotaSlotIOT')) IS NOT NULL DROP TABLE #LastKodeNotaSlotIOT
         SELECT '" . $branch . "'+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/'+RIGHT('0000000'+CAST(ISNULL((select top 1 CAST(RIGHT(p.KodeNota,7) AS NUMERIC(8,0)) from MasterKejadianSlotIOT p where p.KodeNota like '" . $branch . "'+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/%' order by p.KodeNota desc),1) AS VARCHAR),7) KodeNota
         INTO #LastKodeNotaSlotIOT";
 
+		echo $queryGetKode;
+
 		echo "<pre>===Master===</pre>";
 
-		echo "insert INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
-        SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), '" . $noMesin . "', '', '" . $createBy . "', GETDATE(), '" . $operator . "', GETDATE(), '" . $isApproved . "', '" . $approvedBy . "', GETDATE(), '" . $cabang1 . "'
-        FROM #LastKodeNotaSlotIOT";
+		if($isApproved == 1) {
+			echo "<pre>===Is Approved===</pre>";
+
+			$queryInsertMasters = "insert INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
+			SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), '" . $noMesin . "', '', '" . $createBy . "', GETDATE(), '" . $operator . "', GETDATE(), $isApproved, '" . $approvedBy . "', GETDATE(), '" . $cabang . "'
+			FROM #LastKodeNotaSlotIOT";
+
+			echo $queryInsertMasters;
+		}
+
+		else if($isApproved == 0){
+			echo "<pre>===No Approved===</pre>";
+
+			$queryInsertMasters1 = "insert INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
+			SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), '" . $noMesin . "', '', '" . $createBy . "', GETDATE(), '" . $operator . "', GETDATE(), $isApproved, NULL, NULL, '" . $cabang . "'
+			FROM #LastKodeNotaSlotIOT";
+	
+			echo $queryInsertMasters1;
+		}
 
 		echo "<pre>===Details===</pre>";
 
@@ -92,20 +109,22 @@ class Detail extends CI_Controller
 		if($isApproved == 1) {
 			echo "<pre>===Approved===</pre>";
 
-			echo "insert INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
+			$queryInsertIsApproved = "insert INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
 			SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, '" . $operator . "', GETDATE(), NULL, NULL, 1
 			FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d
 			WHERE m.KodeNota=:kodenotaPoint4
 			AND m.KodeNota=d.KodeNota 
-			AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)
+			AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)";
+			echo $queryInsertIsApproved;
 	
-			UPDATE s
+			$queryUpdateIsApproved = "update s
 			SET s.StokAkhir=d.StokAkhir, s.Operator='" . $operator . "', s.TglEntry=GETDATE() 
 			FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d, SlotIOT s 
 			WHERE m.KodeNota=:kodenotaPoint4
 			AND m.KodeNota=d.KodeNota 
 			AND m.NoMesin=s.NoMesin 
 			AND d.Slot=s.Slot";
+			echo $queryUpdateIsApproved;
 		}
 		
 		/*
