@@ -77,55 +77,86 @@ class Detail extends CI_Controller
 			echo $queryInsertMasters1;
 		}
 
-		echo "<pre>===Details===</pre>";
+        // Start output buffering
+        ob_start();
 
-		// Sample SQL query output for demonstration
-		if ($details) {
-			foreach ($details as $detail) {
-				if (empty($detail['qty']) || $detail['qty'] < 0) {
-					$detail['qty'] = 0;
-				}
+        echo "<pre>===Details===</pre>";
 
-				$slot = $detail['Slot'];
-				$stok_akhir = $detail['StokAkhir'];
-				$nama_barang = $detail['NamaBarang'];
-				$status_aktif = $detail['Aktif'];
-				$qty = $detail['qty'];
+        // Sample SQL query output for demonstration
+        if ($details) {
+            foreach ($details as $detail) {
+                if (empty($detail['qty']) || $detail['qty'] < 0) {
+                    $detail['qty'] = 0;
+                }
 
-				//echo "insert INTO DetailKejadianSlotIOT (KodeNota, $slot, $stok_akhir, PrevStok)
-				//SELECT KodeNota, '$slot', '$stok_akhir', 0 FROM #LastKodeNotaSlotIOT";
+                $slot = $detail['Slot'];
+                $stok_akhir = $detail['StokAkhir'];
+                $nama_barang = $detail['NamaBarang'];
+                $status_aktif = $detail['Aktif'];
+                $qty = $detail['qty'];
 
-				$query = "insert INTO DetailKejadianSlotIOT (KodeNota, Slot, StokAkhir, PrevStok)
+                //echo "insert INTO DetailKejadianSlotIOT (KodeNota, $slot, $stok_akhir, PrevStok)
+                //SELECT KodeNota, '$slot', '$stok_akhir', 0 FROM #LastKodeNotaSlotIOT;<br>";
+
+                $query = "insert INTO DetailKejadianSlotIOT (KodeNota, Slot, StokAkhir, PrevStok)
                 SELECT KodeNota, '".$slot."', '".$stok_akhir."', 0 FROM #LastKodeNotaSlotIOT";
 
-				//echo "<pre>";
-				//echo "Qty: " . $qty;
-				//echo "</pre>";
+                //$query = "insert INTO DetailKejadianSlotIOT (KodeNota, Slot, StokAkhir, PrevStok)
+                //SELECT KodeNota, '".$slot."', '".$stok_akhir."', 0 FROM #LastKodeNotaSlotIOT;";
 
-				echo $query . '<br>';
-			}
-		}
+                //echo "<pre>";
+                //echo "Qty: " . $qty;
+                //echo "</pre>";
 
-		if($isApproved == 1) {
-			echo "<pre>===Approved===</pre>";
+                //echo $query . '<br>';
+            }
+        }
 
-			$queryInsertIsApproved = "insert INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
-			SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, '" . $operator . "', GETDATE(), NULL, NULL, 1
-			FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d
-			WHERE m.KodeNota=:kodenotaPoint4
-			AND m.KodeNota=d.KodeNota 
-			AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)";
-			echo $queryInsertIsApproved;
-	
-			$queryUpdateIsApproved = "update s
-			SET s.StokAkhir=d.StokAkhir, s.Operator='" . $operator . "', s.TglEntry=GETDATE() 
-			FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d, SlotIOT s 
-			WHERE m.KodeNota=:kodenotaPoint4
-			AND m.KodeNota=d.KodeNota 
-			AND m.NoMesin=s.NoMesin 
-			AND d.Slot=s.Slot";
-			echo $queryUpdateIsApproved;
-		}
+        // End output buffering and send output
+        ob_end_flush();
+
+        if($isApproved == 1){
+            $query = "select * from #LastKodeNotaSlotIOT";
+            //$kodenotap4 = $this->opc->query($query)->row();
+            echo "<pre>===Approved===</pre>";
+
+            $queryInsertIsApproved = "insert INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
+            SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, '".$operator."', GETDATE(), NULL, NULL, 1
+            FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d
+            WHERE m.KodeNota=:kodenotaPoint4
+            AND m.KodeNota=d.KodeNota
+            AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)";
+            //$this->opc->query($queryInsertIsApproved);
+            echo $queryInsertIsApproved;
+
+            $queryUpdateIsApproved = "update s
+            SET s.StokAkhir=d.StokAkhir, s.Operator='".$operator."', s.TglEntry=GETDATE()
+            FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d, SlotIOT s
+            WHERE m.KodeNota=:kodenotaPoint4
+            AND m.KodeNota=d.KodeNota
+            AND m.NoMesin=s.NoMesin
+            AND d.Slot=s.Slot";
+            //$this->opc->query($queryUpdateIsApproved);
+            echo $queryUpdateIsApproved;
+
+            $message = "Berhasil Update Slot. *With Approve";
+
+            $this->session->set_flashdata('message', [
+                'icon' => 'success',
+                'title' => 'Success!',
+                'text' => $message,
+            ]);
+        }
+
+        else {
+            $message = "Insert Sukses! with no Approve";
+
+            $this->session->set_flashdata('message', [
+                'icon' => 'success',
+                'title' => 'Success!',
+                'text' => $message,
+            ]);
+        }
 		
 		/*
 		-- 4. simpan Opname Slot IOT - di kanan atas saat detail
@@ -165,11 +196,13 @@ class Detail extends CI_Controller
 		
 		//Cara 1
 		//$this->session->set_flashdata('message','<div class="alert alert-success" role="alert">New Qty added!</div>');
+		/*
 		$this->session->set_flashdata('message', [
 			'icon' => 'success',
 			'title' => 'Data Berhasil Masuk!',
 			'text' => 'Data berhasil ditambahkan!',
 		]);
+		*/
 		redirect('dashboard');
 	}
 
