@@ -93,16 +93,16 @@ class Detail extends CI_Controller
 				$qty = $detail['qty'];
 
 				//echo "insert INTO DetailKejadianSlotIOT (KodeNota, $slot, $stok_akhir, PrevStok)
-				//SELECT KodeNota, '$slot', '$stok_akhir', 0 FROM #LastKodeNotaSlotIOT;<br>";
+				//SELECT KodeNota, '$slot', '$stok_akhir', 0 FROM #LastKodeNotaSlotIOT";
 
 				$query = "insert INTO DetailKejadianSlotIOT (KodeNota, Slot, StokAkhir, PrevStok)
-                SELECT KodeNota, '".$slot."', '".$stok_akhir."', 0 FROM #LastKodeNotaSlotIOT;<br>";
+                SELECT KodeNota, '".$slot."', '".$stok_akhir."', 0 FROM #LastKodeNotaSlotIOT";
 
 				//echo "<pre>";
 				//echo "Qty: " . $qty;
 				//echo "</pre>";
 
-				echo $query;
+				echo $query . '<br>';
 			}
 		}
 
@@ -162,32 +162,15 @@ class Detail extends CI_Controller
 		AND m.NoMesin=s.NoMesin 
 		AND d.Slot=s.Slot
 		*/
-
-		//echo $qty;
-
+		
 		//Cara 1
-		/*
-		die;
-
-		$this->session->set_flashdata('message','<div class="alert alert-success" role="alert">New Qty added!</div>');
+		//$this->session->set_flashdata('message','<div class="alert alert-success" role="alert">New Qty added!</div>');
+		$this->session->set_flashdata('message', [
+			'icon' => 'success',
+			'title' => 'Data Berhasil Masuk!',
+			'text' => 'Data berhasil ditambahkan!',
+		]);
 		redirect('dashboard');
-		*/
-
-		//Cara 2
-		/*
-		$data['noMesin'] = $noMesin;
-		$data['namaStaff'] = $namaStaff;
-		$data['namaCabang'] = $namaCabang;
-		$data['cabang'] = $cabang;
-		$data['isApproved'] = $isApproved;
-		$data['createBy'] = $createBy;
-		$data['operator'] = $operator;
-		$data['approvedBy'] = $approvedBy;
-		$data['details'] = $details;
-		$data['query'] = $query;
-		*/
-		//echo $query;
-		//$this->load->view('detail', $data);
 	}
 
 	public function formatDatabase($cabang){

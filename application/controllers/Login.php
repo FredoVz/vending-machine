@@ -72,7 +72,11 @@ class Login extends CI_Controller
                 redirect('dashboard');
             } else {
                 // Set flashdata for error message
-                $this->session->set_flashdata('error', 'Akun tidak ditemukan atau password salah!');
+                $this->session->set_flashdata('error', [
+                    'icon' => 'error',
+                    'title' => 'Login Gagal!',
+                    'text' => 'Akun tidak ditemukan!',
+                ]);
                 redirect('login');
             }
         } else {

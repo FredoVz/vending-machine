@@ -40,12 +40,13 @@
 <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
 <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
 </head>
-<body class="bg-gradient-primary" style="background-color: orange;">
+<body class="bg-gradient-primary" style="background-color: #f26822;">
 <div class="container">
 
 <!-- #e7dbeb -->
     <!-- Outer Row -->
     <div class="row justify-content-center">
+    <!--div class="flash-data" data-flashdata="< ?= $this->session->flashdata('error'); ?>"></div-->
         <div class="col-xl-5 col-lg-12 col-md-9">
             <div class="card o-hidden border-0 shadow-lg my-5" style="">
                 <div class="card-body p-0">
@@ -58,11 +59,12 @@
                                 </div>
 
                                 <!-- Pesan Error -->
-                                <?php if ($this->session->flashdata('error')): ?>
+                                <div class="flash-data" data-flashdata='<?= json_encode($this->session->flashdata('error')); ?>'></div>
+                                <!--?php if ($this->session->flashdata('error')): ?>
                                     <div class="alert alert-danger">
-                                        <?= $this->session->flashdata('error'); ?>
+                                        < ?= $this->session->flashdata('error'); ?>
                                     </div>
-                                <?php endif; ?>
+                                < ?php endif; ?-->
 
                                 <form method="POST" action="<?php echo base_url('login/index'); ?>" class="user">
                                     <div class="form-group mb-3">
@@ -104,6 +106,34 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js" integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+
+<!-- SWEET ALERT -->
+<!--script src="< ?= base_url(); ?>assets/sweetalert2-11.14.5/package/js/sweetalert2.all.min.js"></script-->
+<!--script src="< ?= base_url(); ?>assets/sweetalert2-11.14.5/package/js/myscript.js"></script-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        console.log("masuk");
+        var flashData = document.querySelector('.flash-data').dataset.flashdata;
+        var confirmButtonText = 'OK';
+
+        //console.log(flashData);
+        if(flashData) {
+            // Parsing data JSON
+            var data = JSON.parse(flashData);
+
+            Swal.fire({
+                
+                icon: data.icon,
+                title: data.title,
+                text: data.text,
+                confirmButtonText: confirmButtonText,
+            });
+        }
+    });
+</script>
+
+<!-- TOGGLE HIDDEN AND SHOW PASSWORD -->
 <script>
         // Script untuk toggle visibility password
         var togglePassword = document.getElementById('togglePassword');
@@ -119,6 +149,6 @@
             eyeIcon.classList.toggle('bi-eye');
             eyeIcon.classList.toggle('bi-eye-slash');
         });
-    </script>
+</script>
 </body>
 </html>

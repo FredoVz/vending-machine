@@ -4,8 +4,10 @@
         <div class="col-xl-12 col-lg-12 col-md-12">
             <div class="card shadow-lg mb-5 my-5">
 
-                <?= $this->session->flashdata('message'); ?>
-
+                <!--?= $this->session->flashdata('message'); ?-->
+                <!--div class="flash-data" data-flashdata="< ?= $this->session->flashdata('message'); ?>"></di-->
+                <div class="flash-data" data-flashdata='<?= json_encode($this->session->flashdata('message')); ?>'></div>
+                
                 <div class="card-header d-flex flex-column flex-md-row justify-content-between align-items-center">
                     <div class="d-flex flex-row align-items-center mb-3 mb-md-0">
                         <div class="custom-spacing me-2">Show</div>
@@ -150,6 +152,34 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
+
+<!-- SWEET ALERT -->
+<!--script src="< ?= base_url(); ?>assets/sweetalert2-11.14.5/package/js/sweetalert2.all.min.js"></script-->
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+            
+    document.addEventListener('DOMContentLoaded', function() {
+        var flashData = document.querySelector('.flash-data').dataset.flashdata;
+        var confirmButtonText = 'OK';
+
+        //console.log(flashData);
+        
+        if (flashData) {
+            // Parsing data JSON
+            var data = JSON.parse(flashData);
+
+            console.log(data);
+
+            Swal.fire({
+                icon: data.icon,
+                title: data.title,
+                text: data.text,
+                confirmButtonText: confirmButtonText
+            });
+        }
+    });
+</script>
+   
 <!-- JavaScript -->
 <script>
     var data = <?php echo json_encode($arrayVM); ?>;
@@ -441,7 +471,7 @@
     $(document).on('click', '.openDetailModal', function () {
         var id = $(this).data('NoMesin');
         var resDetails = <?= json_encode($arrayDetailVM); ?>; // Convert PHP array to JavaScript
-        console.log(resDetails);
+        //console.log(resDetails);
         var filteredData = resDetails.filter(vm => vm.id == id); // Get all data matching the ID
         var modalContent = '';
         var hiddenInputs = '';
