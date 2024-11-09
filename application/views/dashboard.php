@@ -115,13 +115,13 @@
                 </button>
             </div>
             <form id="detailForm" action="<?= base_url('detail'); ?>" method="post">
-
-                <div class="modal-header" style="display: flex; justify-content: space-between; align-items: flex-start;">
-                    <div style="display: flex; flex-direction: column;">
+                
+                <div class="modal-header d-flex flex-column flex-md-row align-items-start">
+                    <div style="display: flex; flex-direction: column; width: 100%;">
                         <div id="header-content" style="margin-bottom: 1rem;">
                             <!-- Dynamic Header Content Will Appear Here -->
                         </div>
-
+                        
                         <div class="form-row align-items-center mb-1" style="display: flex; align-items: center;">
                             <div class="col-auto">
                                 <label class="form-check-label mr-2"><strong>Approve :</strong></label>
@@ -130,9 +130,8 @@
                             </div>
                         </div>
                     </div>
-
-                    <div class="modal-footer" style="margin-left: auto;">
-                        <!--button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button-->
+                    
+                    <div class="modal-footer mt-3 mt-md-0">
                         <button type="submit" class="btn btn-primary">Add</button>
                     </div>
                 </div>
