@@ -168,7 +168,7 @@
             // Parsing data JSON
             var data = JSON.parse(flashData);
 
-            console.log(data);
+            //console.log(data);
 
             Swal.fire({
                 icon: data.icon,
