@@ -81,7 +81,7 @@
                     </button>
 
                     <div>
-                        <h3>Vending Machine</h3>
+                        <h5>Vending Machine</h5>
                     </div>
 
                     <!-- Topbar Navbar -->
@@ -113,23 +113,38 @@
 
                         <div class="topbar-divider d-none d-sm-block"></div>
 
-                        <ul class="na navbar-nav navbar-right d-flex align-items-center">
+                        <ul class="navbar-nav navbar-right d-flex align-items-center">
                             <?php if ($this->session->userdata('logged_in')) { ?>
                                 <li class="nav-item">
-                                <!--li-->
-                                    <div>Selamat Datang, <?php echo $this->session->userdata('email'); ?></div>
-                                </li>
-                                <li class="nav-item ml-2">
-                                <!--li class="ml-2"-->
-                                    <?php echo anchor('login/logout', 'Logout', ['class' => 'nav-link']); ?>
+                                    <div><?php echo $this->session->userdata('email'); ?></div>
                                 </li>
                             <?php } else { ?>
                                 <li class="nav-item">
-                                <!--li-->
                                     <?php echo anchor('login/index', 'Login', ['class' => 'nav-link']); ?>
                                 </li>
                             <?php } ?>
                         </ul>
+                        <!-- Nav Item - User Information -->
+                        <li class="nav-item dropdown no-arrow">
+                            <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button"
+                                data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                <img class="img-profile rounded-circle"
+                                    src="<?= base_url('assets/img/undraw_profile.svg'); ?>">
+                            </a>
+                            <!-- Dropdown - User Information -->
+                            <div class="dropdown-menu dropdown-menu-right shadow animated--grow-in"
+                                aria-labelledby="userDropdown">
+                                <!--a class="dropdown-item" href="< ?= base_url('user'); ?>">
+                                    <i class="fas fa-user fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    My Profile
+                                </a>
+                                <div class="dropdown-divider"></div-->
+                                <a class="dropdown-item" href="<?= base_url('login/logout'); ?>">
+                                    <i class="fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </li>
                     </ul>
                 </nav>
             <!--/div-->

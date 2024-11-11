@@ -59,10 +59,14 @@ class Login extends CI_Controller
                 }
             }
 
+
+
             if ($foundUser) {
+                $nama = strtolower($foundUser['Nama']);
+                
                 // Set session data if login is successful
                 $this->session->set_userdata([
-                    'email' => $foundUser['Nama'],
+                    'email' => $nama,
                     'kode' => $foundUser['Kode'],
                     'aktif' => $foundUser['Aktif'],
                     'jabatan' => $foundUser['Jabatan'],

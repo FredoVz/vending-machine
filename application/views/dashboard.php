@@ -24,7 +24,7 @@
                         <div class="ms-2"> Entries</div>
                     </div>
                     <h5 class="mb-0">Data List</h5>
-                    <div class="clearable position-relative" style="width: 250px; position: relative;">
+                    <div class="clearable position-relative" style="width: auto; position: relative;">
                         <input type="text" id="searchInput" class="form-control" placeholder="Search..."
                             style="padding-right: 24px;">
                         <!--i class="clearable__clear" id="cancelSearch">&times;</i-->
