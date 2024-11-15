@@ -48,10 +48,11 @@
                                     </th>
                                     <th scope="col" style="width:25%;">Action </th>
                                 </tr>
-                            </thead>
+                            </thead> 
                             <!-- data-nama-staff="< ?= $vm['NamaStaff']; ?>" -->
                             <tbody id="data-body" style="overflow-y: auto;">
                                 <?php if (!empty($arrayVM)): ?>
+                                    <?php $i = 1; // Initialize $i ?>
                                     <?php foreach ($arrayVM as $vm): ?>
                                         <tr>
                                             <td scope="row" style="width:25%;" data-label="Cabang">
@@ -65,19 +66,13 @@
                                                 <?php echo $vm['StatusVM']; ?>
                                             </td>
                                             <td scope="row" style="width:25%;">
-                                            <button 
-                                                class="btn btn-primary openDetailModal" 
-                                                data-toggle="modal"
-                                                data-target="#newDetailModal"
-                                                data-no-mesin="<?= $vm['NoMesin']; ?>"
-                                                data-nama-staff="<?= $arrayDetailVM[0]['NamaStaff']; ?>"
-                                                data-nama-cabang="<?= $vm['NamaCabang']; ?>"
-                                                data-cabang="<?= $vm['Cabang']; ?>"
-                                            >
-                                                Detail
-                                            </button>
+                                                <!--a href="< ?= base_url('detail/') . $i ?>" class="btn btn-primary">
+                                                    Detail
+                                                </a-->
+                                                <?php echo anchor('detail/index/'.$vm['NoMesin'].'/'.$arrayDetailVM[0]['NamaStaff'].'/'.$vm['NamaCabang'], '<div class="btn btn-primary">Detail</div>'); ?>
                                             </td>
                                         </tr>
+                                        <?php $i++; // Increment $i ?>
                                     <?php endforeach; ?>
                                 <?php else: ?>
                                     <tr>
@@ -99,46 +94,6 @@
                     </nav>
                 </div>
             </div>
-        </div>
-    </div>
-</div>
-
-<!-- Modal -->
-<div class="modal fade" id="newDetailModal" tabindex="-1" role="dialog" aria-labelledby="newDetailModalLabel"
-    aria-hidden="true">
-    <div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="newDetailModalLabel">Add New Detail</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                    <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <form id="detailForm" action="<?= base_url('detail'); ?>" method="post">
-                
-                <div class="modal-header d-flex flex-column flex-md-row align-items-start">
-                    <div style="display: flex; flex-direction: column; width: 100%;">
-                        <div id="header-content" style="margin-bottom: 1rem;">
-                            <!-- Dynamic Header Content Will Appear Here -->
-                        </div>
-                        
-                        <div class="form-row align-items-center mb-1" style="display: flex; align-items: center;">
-                            <div class="col-auto">
-                                <label class="form-check-label mr-2"><strong>Approve :</strong></label>
-                                <input class="form-check-input col-form-label ml-2" type="checkbox" id="approveCheckbox">
-                                <input type="hidden" name="approve" id="approveHidden" value="0">
-                            </div>
-                        </div>
-                    </div>
-                    
-                    <div class="modal-footer mt-3 mt-md-0">
-                        <button type="submit" class="btn btn-primary">Add</button>
-                    </div>
-                </div>
-
-                <div class="modal-body" id="modal-body-content">
-                </div>
-            </form>
         </div>
     </div>
 </div>
@@ -202,23 +157,21 @@
         var no = offset + 1; // Set nomor urut berdasarkan offset saat ini
 
         paginatedData.forEach(row => {
+            // Outputkan URL detail menggunakan anchor PHP
+            var detailUrl = "<?php echo base_url('detail/index/'); ?>" + row.NoMesin + '/' + dataDetail[0].NamaStaff + '/' + row.NamaCabang;
+            //var detailUrl = "< ?php echo base_url('detail/'); ?>" + no;
+
             $dataBody.append(`
                 <tr>
                     <td scope="row" style="width:25%;" data-label="Cabang">${row.Cabang}</td>
                     <td scope="row" style="width:25%;" data-label="NamaCabang">${row.NamaCabang}</td>
                     <td scope="row" style="width:25%;" data-label="NamaStaff">${row.StatusVM}</td>
                     <td scope="row" style="width:25%;">
-                        <button class="btn btn-primary openDetailModal" 
-                        data-toggle="modal" 
-                        data-target="#newDetailModal"                                                 
-                            data-no-mesin="${row.NoMesin}"
-                            data-nama-staff="${dataDetail[0].NamaStaff}"
-                            data-nama-cabang="${row.NamaCabang}"
-                            data-cabang="${row.Cabang}"
-                            >Detail</button>
+                        <a href="${detailUrl}" class="btn btn-primary">Detail</a>
                     </td>
                 </tr>
             `);
+            no++
         });
     }
 
@@ -411,146 +364,5 @@
 
         filteredData = data;  // Initialize filteredData with allData on page load
         refreshTable();
-    });
-</script>
-
-<!-- FUNGSI DYNAMIC MODAL HEADER -->
-<script>
-    $(document).ready(function() {
-        $(".openDetailModal").on("click", function() {
-            //console.log("Button clicked!");
-
-            // Get data dari atribut button
-            var noMesin = $(this).data("no-mesin");
-            var namaStaff = $(this).data("nama-staff");
-            var namaCabang = $(this).data("nama-cabang");
-            var cabang = $(this).data("cabang");
-
-            // Debugging untuk melihat data yang diambil
-            //console.log("No Mesin:", noMesin);
-            //console.log("Nama Staff:", namaStaff);
-            //console.log("Nama Cabang:", namaCabang);
-
-            // Membuat header content
-            var headerContent = `
-            <div class="modal-header-entry">
-                <div class="d-flex">
-                    <strong>No Mesin : </strong> 
-                    <div>${noMesin}</div>
-                </div>
-                <div class="d-flex">
-                    <strong>Nama Staff:</strong> 
-                    <div>${namaStaff}</div>
-                </div>
-                <div class="d-flex">
-                    <strong>Nama Cabang : </strong> 
-                    <div>${namaCabang}</div>
-                </div>
-            </div>
-            `;
-
-            var hiddenInputs = `
-                <input type="hidden" name="NoMesin" value="${noMesin}">
-                <input type="hidden" name="NamaStaff" value="${namaStaff}">
-                <input type="hidden" name="NamaCabang" value="${namaCabang}">
-                <input type="hidden" name="Cabang" value="${cabang}">
-            `;
-
-            // Memasukkan header content ke modal
-            $("#header-content").html(headerContent);
-
-            //$("#detailForm input[type='hidden']").remove();
-            $('#detailForm').append(hiddenInputs);
-        });
-    });
-</script>
-
-<!-- FUNGSI DYNAMIC MODAL BODY -->
-<script>
-    $(document).on('click', '.openDetailModal', function () {
-        var id = $(this).data('NoMesin');
-        var resDetails = <?= json_encode($arrayDetailVM); ?>; // Convert PHP array to JavaScript
-        //console.log(resDetails);
-        var filteredData = resDetails.filter(vm => vm.id == id); // Get all data matching the ID
-        var modalContent = '';
-        var hiddenInputs = '';
-
-        if (filteredData.length > 0) {
-            filteredData.forEach(function (data, index) {
-                // Determine Aktif status
-                var aktifStatus = data.Aktif == 1 ? 'Aktif' : 'Tidak Aktif';
-
-                // Convert StokAkhir to integer, or set to 0 if NaN
-                var stokAkhir = parseInt(data.StokAkhir);
-                var formattedStokAkhir = isNaN(stokAkhir) ? '0' : stokAkhir.toLocaleString();
-
-                modalContent += `
-                    <div class="modal-body-entry">
-                        <div class="d-flex">
-                            <strong>Slot : </strong>
-                            <div>${data.Slot}</div>
-                        </div>
-                        <div class="d-flex">
-                            <strong>Nama Barang : </strong>
-                            <div>${data.NamaBarang}</div>
-                        </div>
-                        <div class="d-flex">
-                            <strong>Stok Akhir : </strong>
-                            <div>${formattedStokAkhir}</div>
-                        </div>
-                        <div class="d-flex">
-                            <strong>Status : </strong>
-                            <div>${aktifStatus}</div>
-                        </div>
-                        <div class="form-row align-items-center mt-1 mb-1 mr-1 ml-1">
-                            <div class="col-auto">
-                                <label for="qty" class="col-form-label"><strong>Qty:</strong></label>
-                            </div>
-                            <div class="col">
-                                <input type="number" class="form-control qty-input" id="qty_${index}" name="details[${index}][qty]" placeholder="Input qty..." value="0" min="0" data-index="${index}">
-                            </div>
-                            </div>
-                        </div>
-                        <hr>
-                    </div>
-                `;
-
-                // Create hidden inputs for each data field to be sent to the controller
-                hiddenInputs += `
-                    <input type="hidden" name="details[${index}][Slot]" value="${data.Slot}">
-                    <input type="hidden" name="details[${index}][StokAkhir]" id="stokAkhir_${index}" value="${formattedStokAkhir}">
-                    <input type="hidden" name="details[${index}][NamaBarang]" value="${data.NamaBarang}">
-                    <input type="hidden" name="details[${index}][Aktif]" value="${data.Aktif}">
-                `;
-            });
-            $('#modal-body-content').html(modalContent); // Insert the generated content into the modal
-
-            // Append hidden inputs to the form
-            $('#detailForm').append(hiddenInputs);
-        } else {
-            alert('Data tidak ditemukan.');
-        }
-    });
-
-    // Update Stok Akhir based on Qty input
-    $(document).on('input', '.qty-input', function () {
-        var index = $(this).data('index'); // Get the index for this input
-        var qty = parseInt($(this).val()) || 0; // Get the qty value, defaulting to 0 if empty
-
-        // Update hidden input and displayed StokAkhir with the qty value
-        $(`#stokAkhir_${index}`).val(qty);
-        //$(`#stokAkhirDisplay_${index}`).text(qty);
-    });
-</script>
-
-<!-- FUNGSI CENTANG APPROVE DI MODAL -->
-<script>
-    $(document).ready(function () {
-        $('#approveCheckbox').on('change', function () {
-            // Jika checkbox dicentang, atur hidden input value ke 1
-            $('#approveHidden').val(this.checked ? '1' : '0');
-            //$check = $('#approveHidden').val(this.checked ? '1' : '0');
-        });
-        //console.log($check)
     });
 </script>

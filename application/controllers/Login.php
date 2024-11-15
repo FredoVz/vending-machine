@@ -17,9 +17,11 @@ class Login extends CI_Controller
 
     public function index()
     {
+        /*
         if ($this->session->userdata('logged_in')) {
             redirect('dashboard');
         }
+        */
 
         // Array of hardcoded staff members
         $arrayStaff = [
