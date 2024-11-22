@@ -13,7 +13,7 @@
                             </div>
                             <div>
                                 <strong>Nama Staff: </strong>
-                                <?= urldecode($namaStaff); ?>
+                                <?= strtolower(urldecode($namaStaff)); ?>
                             </div>
                             <div>
                                 <strong>Nama Cabang: </strong>
@@ -39,14 +39,14 @@
                     </div>
                     <div class="card-body p-0">
                         <div class="table-responsive" style="overflow-x: auto;">
-                            <table class="table table-bordered table-striped mb-0" style="width: 100%;">
+                            <table class="table table-bordered table-striped mb-0">
                                 <thead id="data-head" style="background-color: orange; position: sticky;">
                                     <tr>
-                                        <th scope="col" style="width:20%;" data-column="Slot">Slot</th>
-                                        <th scope="col" style="width:20%;" data-column="NamaBarang">Nama Barang</th>
-                                        <th scope="col" style="width:20%;" data-column="StokAkhir">Stok Akhir</th>
-                                        <th scope="col" style="width:20%;" data-column="Aktif">Status</th>
-                                        <th scope="col" style="width:20%;">Action</th>
+                                        <th scope="col" style="width:5%;" data-column="Slot">Slot</th>
+                                        <th scope="col" style="width:23%;" data-column="NamaBarang">Nama Barang</th>
+                                        <th scope="col" style="width:23%;" data-column="StokAkhir">Stok Akhir</th>
+                                        <th scope="col" style="width:23%;" data-column="Aktif">Status</th>
+                                        <th scope="col" style="width:23%;">Action</th>
                                     </tr>
                                 </thead>
                                 <tbody id="data-body">
@@ -54,19 +54,19 @@
                                         <?php $i = 0; // Initialize $i ?>
                                         <?php foreach ($arrayDetailVM as $vm): ?>
                                             <tr>
-                                                <td scope="row" style="width:20%;" data-label="Slot">
+                                                <td scope="row" style="width:5%;" data-label="Slot">
                                                     <?= $vm['Slot']; ?>
                                                 </td>
-                                                <td scope="row" style="width:20%;" data-label="NamaBarang">
+                                                <td scope="row" style="width:23%;" data-label="NamaBarang">
                                                     <?= $vm['NamaBarang']; ?>
                                                 </td>
-                                                <td scope="row" style="width:20%;" data-label="StokAkhir">
+                                                <td scope="row" style="width:23%;" data-label="StokAkhir">
                                                     <?= (int) $vm['StokAkhir']; ?>
                                                 </td>
-                                                <td scope="row" style="width:20%;" data-label="Aktif">
+                                                <td scope="row" style="width:23%;" data-label="Aktif">
                                                     <?= $vm['Aktif'] == 1 ? 'Aktif' : 'Tidak Aktif'; ?>
                                                 </td>
-                                                <td scope="row" style="width:20%;">
+                                                <td scope="row" style="width:23%;">
                                                     <div class="form-row align-items-center mt-1 mb-1 mr-1 ml-1">
                                                         <div class="col-auto">
                                                             <label for="qty"

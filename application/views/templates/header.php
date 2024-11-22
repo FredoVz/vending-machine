@@ -35,12 +35,7 @@
         cursor: pointer; /* Makes the input look clickable */
     }
 
-    @media (max-width: 768px) {
-    .table-responsive {
-        overflow-x: auto; /* Allows horizontal scrolling on smaller screens */
-    }
-
-    /* SEARCH */
+        /* SEARCH */
     .clearable input[type=text] {
         padding-right: 24px;
     }
@@ -49,11 +44,55 @@
         display: inline;
     }
 
-    @media (max-width: 576px) {
-        .clearable {
-            width: 100%; /* Full width on small screens */
+    @media (max-width: 768px) {
+        /*Atur table*/
+        .table-responsive {
+            overflow-x: auto; /* Allows horizontal scrolling on smaller screens */
+        }
+
+        .table {
+            width: 1000px;
+        }
+
+        /* Make the input fields take the full width on small screens */
+        .qty-input {
+            width: 100% !important; /* Ensures the input takes full width on mobile */
+        }
+
+        .form-row {
+            flex-wrap: wrap; /* Allows label and input to stack on smaller screens */
+        }
+
+        .col-auto {
+            width: 100%; /* Label will take full width */
+            text-align: left; /* Align label to the left */
+        }
+
+        .col {
+            width: 100%; /* Input field will take full width */
+        }
+
+        /*Atur tombol add*/
+        .card-header {
+            text-align: left;  /* Aligns the content to the left */
+        }
+
+        /* Ensure the Add button is centered or aligned properly */
+        .mt-3 {
+            width: 100%;  /* Make the button take the full width on small screens */
+            display: flex;
+            justify-content: flex-end;  /* Center the button */
+            /*margin-left: 150px;*/
+            /*padding-right: 10px;*/
+            /*right: 0%;*/
+            text-align: right;
         }
     }
-}
+
+    @media (max-width: 576px) {
+        .clearable {
+            width: 100%;  /*Full width on small screens */
+        }
+    }
 </style>
 </head>
