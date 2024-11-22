@@ -114,15 +114,18 @@
                         <div class="topbar-divider d-none d-sm-block"></div>
 
                         <ul class="navbar-nav navbar-right d-flex align-items-center">
-                            <?php if ($this->session->userdata('logged_in')) { ?>
+                            <!--?php if ($this->session->userdata('logged_in')) { ?>
                                 <li class="nav-item">
-                                    <div><?php echo $this->session->userdata('email'); ?></div>
+                                    <div>< ?php echo $this->session->userdata('email'); ?></div>
                                 </li>
-                            <?php } else { ?>
+                            < ?php } else { ?>
                                 <li class="nav-item">
-                                    <?php echo anchor('login/index', 'Login', ['class' => 'nav-link']); ?>
+                                    < ?php echo anchor('login/index', 'Login', ['class' => 'nav-link']); ?>
                                 </li>
-                            <?php } ?>
+                            < ?php } ?-->
+                            <li class="nav-item">
+                                <div><?php echo $this->session->userdata('email_refill_vendingmachine'); ?></div>
+                            </li>
                         </ul>
                         <!-- Nav Item - User Information -->
                         <li class="nav-item dropdown no-arrow">

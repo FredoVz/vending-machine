@@ -11,7 +11,7 @@ class Dashboard extends CI_Controller
         $this->load->library('session');
 
         // Check if user is logged in, otherwise redirect to login page
-        if (!$this->session->userdata('logged_in')) {
+        if (!$this->session->userdata('email_refill_vendingmachine')) {
             redirect('login'); // Redirect to login page if not logged in
         }
     }
@@ -26,7 +26,7 @@ class Dashboard extends CI_Controller
         //echo $namaStaff;
         //die;
 
-        $cabang = $this->session->userdata('branch');
+        $cabang = $this->session->userdata('branch_refill_vendingmachine');
 
         $arrayVM = [
             [
@@ -81,7 +81,7 @@ class Dashboard extends CI_Controller
         echo "</pre>";
 
         // Ambil data hidden input dari form header
-        $branch = $this->session->userdata('branch');
+        $branch = $this->session->userdata('branch_refill_vendingmachine');
         $noMesin = $this->input->post('NoMesin');
         $namaStaff = $this->input->post('NamaStaff');
         $namaCabang = $this->input->post('NamaCabang');

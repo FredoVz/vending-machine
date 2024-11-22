@@ -66,15 +66,16 @@ class Login extends CI_Controller
             if ($foundUser) {
                 $nama = strtolower($foundUser['Nama']);
                 
+                $data = [
+                    'email_refill_vendingmachine' => $nama,
+                    'kode_refill_vendingmachine' => $foundUser['Kode'],
+                    'aktif_refill_vendingmachine' => $foundUser['Aktif'],
+                    'jabatan_refill_vendingmachine' => $foundUser['Jabatan'],
+                    'branch_refill_vendingmachine' => $foundUser['Branch'],
+                    //'logged_in' => true, // Marks user as logged in
+                ];
                 // Set session data if login is successful
-                $this->session->set_userdata([
-                    'email' => $nama,
-                    'kode' => $foundUser['Kode'],
-                    'aktif' => $foundUser['Aktif'],
-                    'jabatan' => $foundUser['Jabatan'],
-                    'branch' => $foundUser['Branch'],
-                    'logged_in' => true, // Marks user as logged in
-                ]);
+                $this->session->set_userdata($data);
                 redirect('dashboard');
             } else {
                 // Set flashdata for error message
@@ -94,7 +95,12 @@ class Login extends CI_Controller
 
     public function logout()
     {
-        $this->session->sess_destroy();
+        //$this->session->sess_destroy();
+        $this->session->unset_userdata('email_refill_vendingmachine');
+        $this->session->unset_userdata('kode_refill_vendingmachine');
+        $this->session->unset_userdata('aktif_refill_vendingmachine');
+        $this->session->unset_userdata('jabatan_refill_vendingmachine');
+        $this->session->unset_userdata('branch_refill_vendingmachine');
         redirect('login');
     }
 }
