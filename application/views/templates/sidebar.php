@@ -61,6 +61,14 @@
                 </a>
             </li>
 
+            <!-- Nav Item - Dashboard -->
+            <li class="nav-item <?php echo ($this->uri->segment(1) == 'dashboard2') ? 'active' : ''; ?>">
+                <a class="nav-link" href="<?php echo base_url('dashboard2'); ?>">
+                    <i class="fas fa-fw fa-database" style="color: black;"></i>
+                    <span style="color: black;">Dashboard 2</span>
+                </a>
+            </li>
+
             <!-- Sidebar Toggler (Sidebar) -->
             <div class="text-center d-none d-md-inline">
                 <button class="rounded-circle border-0" id="sidebarToggle" 
