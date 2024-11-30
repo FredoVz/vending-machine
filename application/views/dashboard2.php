@@ -23,7 +23,7 @@
                         </div>
                         <div class="ms-2"> Entries</div>
                     </div>
-                    <h5 class="mb-0">Data List</h5>
+                    <h5 class="mb-0">Kode Nota (Not Approve)</h5>
                     <div class="clearable position-relative" style="width: auto; position: relative;">
                         <input type="text" id="searchInput" class="form-control" placeholder="Search..."
                             style="padding-right: 24px;">

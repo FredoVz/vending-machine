@@ -57,7 +57,7 @@
             <li class="nav-item <?php echo ($this->uri->segment(1) == 'dashboard') ? 'active' : ''; ?>">
                 <a class="nav-link" href="<?php echo base_url('dashboard'); ?>">
                     <i class="fas fa-fw fa-database" style="color: black;"></i>
-                    <span style="color: black;">Dashboard</span>
+                    <span style="color: black;">Refill</span>
                 </a>
             </li>
 
@@ -65,7 +65,7 @@
             <li class="nav-item <?php echo ($this->uri->segment(1) == 'dashboard2') ? 'active' : ''; ?>">
                 <a class="nav-link" href="<?php echo base_url('dashboard2'); ?>">
                     <i class="fas fa-fw fa-database" style="color: black;"></i>
-                    <span style="color: black;">Dashboard 2</span>
+                    <span style="color: black;">Kode Nota</span>
                 </a>
             </li>
 
