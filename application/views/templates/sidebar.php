@@ -44,7 +44,7 @@
     <div id="wrapper">
         <!-- Sidebar -->
          <!-- #b18cc2 -->
-        <ul class="navbar-nav bg-gradient-light sidebar sidebar-dark accordion" id="accordionSidebar">
+        <ul class="navbar-nav bg-gradient-light sidebar sidebar-light accordion" id="accordionSidebar">
 
             <!-- Sidebar - Brand -->
             <a class="sidebar-brand d-flex align-items-center justify-content-center" href="<?php echo base_url('dashboard') ?>">
@@ -56,7 +56,7 @@
             <!-- Nav Item - Dashboard -->
             <li class="nav-item <?php echo ($this->uri->segment(1) == 'dashboard') ? 'active' : ''; ?>">
                 <a class="nav-link" href="<?php echo base_url('dashboard'); ?>">
-                    <i class="fas fa-fw fa-database" style="color: black;"></i>
+                    <i class="fas fa-fw fa-home" style="color: black;"></i>
                     <span style="color: black;">Refill</span>
                 </a>
             </li>
@@ -64,7 +64,7 @@
             <!-- Nav Item - Dashboard -->
             <li class="nav-item <?php echo ($this->uri->segment(1) == 'dashboard2') ? 'active' : ''; ?>">
                 <a class="nav-link" href="<?php echo base_url('dashboard2'); ?>">
-                    <i class="fas fa-fw fa-database" style="color: black;"></i>
+                    <i class="fas fa-fw fa-file-pdf" style="color: black;"></i>
                     <span style="color: black;">Kode Nota</span>
                 </a>
             </li>
