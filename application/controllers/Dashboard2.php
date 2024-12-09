@@ -29,6 +29,7 @@ class Dashboard2 extends CI_Controller {
         $cabang = $this->session->userdata('branch_refill_vendingmachine');
 
         $arrayVM = [
+            /*
             [
                 'Cabang' => $cabang,
                 'NamaCabang' => 'OMEGA KOPERASI',
@@ -59,6 +60,7 @@ class Dashboard2 extends CI_Controller {
                 'StatusVM' => 'OFF',
                 'SelisihJam' => '2378',
             ],
+            */
         ];
 
         $data = [
