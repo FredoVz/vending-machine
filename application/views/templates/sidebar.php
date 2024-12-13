@@ -38,6 +38,7 @@
         z-index: 1020; /* 1020 */
     }
 
+    /* Tabel bawah isi kolom bisa di scroll */
     .table-responsive {
         max-height: 560px;
     }
