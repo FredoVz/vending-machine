@@ -37,17 +37,6 @@
         transition: width 0.3s;
         z-index: 1020; /* 1020 */
     }
-
-    /* Tabel bawah isi kolom bisa di scroll */
-    .table-responsive {
-        max-height: 560px;
-    }
-
-    .table thead {
-        position: sticky;
-        top: 0;
-        z-index: 2; /* Ensure the header stays on top */
-    }
 </style>
 
 <body id="page-top">

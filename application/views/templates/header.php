@@ -94,5 +94,16 @@
             width: 100%;  /*Full width on small screens */
         }
     }
+
+    /* Tabel bawah isi kolom bisa di scroll */
+    .table-responsive {
+        max-height: 560px;
+    }
+
+    .table thead {
+        position: sticky;
+        top: 0;
+        z-index: 2; /* Ensure the header stays on top */
+    }
 </style>
 </head>
