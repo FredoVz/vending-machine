@@ -105,5 +105,47 @@
         top: 0;
         z-index: 2; /* Ensure the header stays on top */
     }
+    /* End of Tabel bawah isi kolom bisa di scroll */
+
+    /* SIDEBAR */
+    /* Ukuran default logo */
+    .sidebar-brand-icon img {
+        transition: all 0.3s ease; /* Smooth transition */
+        height: 30px;
+        width: auto;
+    }
+
+    /* Saat sidebar dalam keadaan collapse */
+    .sidebar.collapsed .sidebar-brand-icon img {
+        height: 15px; /* Logo lebih kecil */
+        width: auto;
+    }
+
+    /* Mobile view: Logo lebih kecil */
+    @media (max-width: 768px) {
+        .sidebar-brand-icon img {
+            height: 15px;
+        }
+    }
+
+    .fixed-top-custom {
+        position: fixed;
+        top: 0;
+        left: 0;
+        right: 0;
+        z-index: 1030; /* 1030 Pastikan di atas konten lainnya */
+    }
+
+    /* Sidebar tetap terlihat saat di-scroll */
+    .sidebar {
+        position: sticky;
+        top: 0;
+        left: 0;
+        height: 100%; /* Penuh sampai bawah */
+        width: auto; /* Lebar default */
+        transition: width 0.3s;
+        z-index: 1020; /* 1020 */
+    }
+    /* END OF SIDEBAR */
 </style>
 </head>

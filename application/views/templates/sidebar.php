@@ -1,44 +1,3 @@
-<style>
-    /* Ukuran default logo */
-    .sidebar-brand-icon img {
-        transition: all 0.3s ease; /* Smooth transition */
-        height: 30px;
-        width: auto;
-    }
-
-    /* Saat sidebar dalam keadaan collapse */
-    .sidebar.collapsed .sidebar-brand-icon img {
-        height: 15px; /* Logo lebih kecil */
-        width: auto;
-    }
-
-    /* Mobile view: Logo lebih kecil */
-    @media (max-width: 768px) {
-        .sidebar-brand-icon img {
-            height: 15px;
-        }
-    }
-
-    .fixed-top-custom {
-        position: fixed;
-        top: 0;
-        left: 0;
-        right: 0;
-        z-index: 1030; /* 1030 Pastikan di atas konten lainnya */
-    }
-
-    /* Sidebar tetap terlihat saat di-scroll */
-    .sidebar {
-        position: sticky;
-        top: 0;
-        left: 0;
-        height: 100%; /* Penuh sampai bawah */
-        width: auto; /* Lebar default */
-        transition: width 0.3s;
-        z-index: 1020; /* 1020 */
-    }
-</style>
-
 <body id="page-top">
     <!-- Page Wrapper -->
     <div id="wrapper">
@@ -163,6 +122,7 @@
         <!--/div-->
         <!-- End of Content Wrapper -->
 
+<!-- SIDEBAR -->
 <script>
     // Mendapatkan elemen sidebar dan tombol toggle
     var sidebar = document.getElementById('accordionSidebar');
@@ -178,3 +138,4 @@
         sidebar.classList.toggle('collapsed');
     });
 </script>
+<!-- END OF SIDEBAR -->
