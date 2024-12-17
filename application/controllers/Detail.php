@@ -89,212 +89,213 @@ class Detail extends CI_Controller
 
 	public function add()
 	{
-
-		echo "<pre>";
-		echo "===TAMPIL DI CONTROLLER===";
-		echo "</pre>";
-
-		// Ambil data hidden input dari form header
-		$branch = $this->session->userdata('branch_refill_vendingmachine');
-		$noMesin = $this->input->post('NoMesin');
-		$namaStaff = $this->input->post('NamaStaff');
-		$namaCabang = $this->input->post('NamaCabang');
-		$cabang = $branch."/01";
-
-        // Ambil data qty yang diinputkan oleh pengguna
-        $qty = $this->input->post('qty'); // qty adalah array, misalnya qty[0], qty[1], ...
-
-		// Retrieve the 'details' array from POST data
-		//$details = $this->input->post('details');
-		//$status_aktif = $details[0]['Aktif'];
-        $arrayDetailVM = json_decode($this->input->post('arrayDetailVM'), true); // Decode JSON to array
-
-        //echo $stok_akhir;
-
-
-		// Ambil nilai 'approve' dari form POST
-		$isApproved = $this->input->post('approve');
-
-        //echo $isApproved;
-
-		// Format mengikuti database
-		$createBy = $this->formatDatabase($cabang);
-		$operator = $this->formatDatabase($cabang);
-		$approvedBy = $this->formatDatabase($cabang);
-
-		// Display the array data
-		//echo "<pre>";
-		//print_r($details); // Output the details array for inspection
-		//echo "</pre>";
-
-		echo "<pre>===Kode Nota===</pre>";
-
-		$queryGetKode = "IF (SELECT OBJECT_ID('tempdb..#LastKodeNotaSlotIOT')) IS NOT NULL DROP TABLE #LastKodeNotaSlotIOT
-        SELECT '" . $branch . "'+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/'+RIGHT('0000000'+CAST(ISNULL((select top 1 CAST(RIGHT(p.KodeNota,7) AS NUMERIC(8,0)) from MasterKejadianSlotIOT p where p.KodeNota like '" . $branch . "'+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/%' order by p.KodeNota desc),1) AS VARCHAR),7) KodeNota
-        INTO #LastKodeNotaSlotIOT";
-
-		echo $queryGetKode;
-
-		echo "<pre>===Master===</pre>";
-
-		if($isApproved == 1) {
-			echo "<pre>===Is Approved===</pre>";
-
-			$queryInsertMasters = "insert INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
-			SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), '" . $noMesin . "', '', '" . $createBy . "', GETDATE(), '" . $operator . "', GETDATE(), $isApproved, '" . $approvedBy . "', GETDATE(), '" . $cabang . "'
-			FROM #LastKodeNotaSlotIOT";
-
-			echo $queryInsertMasters;
-		}
-
-		else if($isApproved == 0){
-			echo "<pre>===Not Approved===</pre>";
-
-			$queryInsertMasters1 = "insert INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
-			SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), '" . $noMesin . "', '', '" . $createBy . "', GETDATE(), '" . $operator . "', GETDATE(), $isApproved, NULL, NULL, '" . $cabang . "'
-			FROM #LastKodeNotaSlotIOT";
-	
-			echo $queryInsertMasters1;
-		}
-
-        // Start output buffering
-        ob_start();
-
-        echo "<pre>===Details===</pre>";
-
-        // Sample SQL query output for demonstration
-
-        // Cek apakah arrayDetailVM tidak kosong
-        if (!empty($arrayDetailVM) && !empty($qty)) 
-        {
-            foreach ($arrayDetailVM as $index => $vm) {
-
-                 // Ambil qty yang sesuai dengan index dari array qty
-                $quantity = isset($qty[$index]) ? $qty[$index] : 0; // Default ke 0 jika qty tidak ada
-                // Misalnya: $vm['Slot'], $vm['NamaBarang'], $vm['StokAkhir'], etc.
-                
-                // Example:
-                $slot = $vm['Slot'];
-                $nama_barang = $vm['NamaBarang'];
-                $stok_akhir = (int)$vm['StokAkhir'];
-                $aktif = $vm['Aktif'];
-
-                // Tentukan stok_akhir baru berdasarkan qty yang diinput
-                if ($quantity > 0) {
-                    // Jika qty diinputkan lebih besar dari 0, maka stok_akhir digantikan dengan nilai qty
-                    $stok_akhir = $quantity;  // Gantikan stok_akhir dengan qty
-                }
-
-                //echo "qty: ".$quantity . '<br>';
-
-                // Lakukan insert/update database sesuai kebutuhan
-                $query = "insert INTO DetailKejadianSlotIOT (KodeNota, Slot, StokAkhir, PrevStok)
-                SELECT KodeNota, '".$slot."', '".$stok_akhir."', 0 FROM #LastKodeNotaSlotIOT";
-                echo $query . '<br>';
-
+        if ($this->input->post()){
+            echo "<pre>";
+            echo "===TAMPIL DI CONTROLLER===";
+            echo "</pre>";
+    
+            // Ambil data hidden input dari form header
+            $branch = $this->session->userdata('branch_refill_vendingmachine');
+            $noMesin = $this->input->post('NoMesin');
+            $namaStaff = $this->input->post('NamaStaff');
+            $namaCabang = $this->input->post('NamaCabang');
+            $cabang = $branch."/01";
+    
+            // Ambil data qty yang diinputkan oleh pengguna
+            $qty = $this->input->post('qty'); // qty adalah array, misalnya qty[0], qty[1], ...
+    
+            // Retrieve the 'details' array from POST data
+            //$details = $this->input->post('details');
+            //$status_aktif = $details[0]['Aktif'];
+            $arrayDetailVM = json_decode($this->input->post('arrayDetailVM'), true); // Decode JSON to array
+    
+            //echo $stok_akhir;
+    
+    
+            // Ambil nilai 'approve' dari form POST
+            $isApproved = $this->input->post('approve');
+    
+            //echo $isApproved;
+    
+            // Format mengikuti database
+            $createBy = $this->formatDatabase($cabang);
+            $operator = $this->formatDatabase($cabang);
+            $approvedBy = $this->formatDatabase($cabang);
+    
+            // Display the array data
+            //echo "<pre>";
+            //print_r($details); // Output the details array for inspection
+            //echo "</pre>";
+    
+            echo "<pre>===Kode Nota===</pre>";
+    
+            $queryGetKode = "IF (SELECT OBJECT_ID('tempdb..#LastKodeNotaSlotIOT')) IS NOT NULL DROP TABLE #LastKodeNotaSlotIOT
+            SELECT '" . $branch . "'+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/'+RIGHT('0000000'+CAST(ISNULL((select top 1 CAST(RIGHT(p.KodeNota,7) AS NUMERIC(8,0)) from MasterKejadianSlotIOT p where p.KodeNota like '" . $branch . "'+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/%' order by p.KodeNota desc),1) AS VARCHAR),7) KodeNota
+            INTO #LastKodeNotaSlotIOT";
+    
+            echo $queryGetKode;
+    
+            echo "<pre>===Master===</pre>";
+    
+            if($isApproved == 1) {
+                echo "<pre>===Is Approved===</pre>";
+    
+                $queryInsertMasters = "insert INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
+                SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), '" . $noMesin . "', '', '" . $createBy . "', GETDATE(), '" . $operator . "', GETDATE(), $isApproved, '" . $approvedBy . "', GETDATE(), '" . $cabang . "'
+                FROM #LastKodeNotaSlotIOT";
+    
+                echo $queryInsertMasters;
             }
-        }
-
-        // End output buffering and send output
-        ob_end_flush();
-
-        if($isApproved == 1){
-            $query = "select * from #LastKodeNotaSlotIOT";
-            //$kodenotap4 = $this->opc->query($query)->row();
-            echo "<pre>===Approved===</pre>";
-
-            echo "<pre>===Insert===</pre>";
-
-            $queryInsertIsApproved = "insert INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
-            SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, '".$operator."', GETDATE(), NULL, NULL, 1
+    
+            else if($isApproved == 0){
+                echo "<pre>===Not Approved===</pre>";
+    
+                $queryInsertMasters1 = "insert INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
+                SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), '" . $noMesin . "', '', '" . $createBy . "', GETDATE(), '" . $operator . "', GETDATE(), $isApproved, NULL, NULL, '" . $cabang . "'
+                FROM #LastKodeNotaSlotIOT";
+        
+                echo $queryInsertMasters1;
+            }
+    
+            // Start output buffering
+            ob_start();
+    
+            echo "<pre>===Details===</pre>";
+    
+            // Sample SQL query output for demonstration
+    
+            // Cek apakah arrayDetailVM tidak kosong
+            if (!empty($arrayDetailVM) && !empty($qty)) 
+            {
+                foreach ($arrayDetailVM as $index => $vm) {
+    
+                     // Ambil qty yang sesuai dengan index dari array qty
+                    $quantity = isset($qty[$index]) ? $qty[$index] : 0; // Default ke 0 jika qty tidak ada
+                    // Misalnya: $vm['Slot'], $vm['NamaBarang'], $vm['StokAkhir'], etc.
+                    
+                    // Example:
+                    $slot = $vm['Slot'];
+                    $nama_barang = $vm['NamaBarang'];
+                    $stok_akhir = (int)$vm['StokAkhir'];
+                    $aktif = $vm['Aktif'];
+    
+                    // Tentukan stok_akhir baru berdasarkan qty yang diinput
+                    if ($quantity > 0) {
+                        // Jika qty diinputkan lebih besar dari 0, maka stok_akhir digantikan dengan nilai qty
+                        $stok_akhir = $quantity;  // Gantikan stok_akhir dengan qty
+                    }
+    
+                    //echo "qty: ".$quantity . '<br>';
+    
+                    // Lakukan insert/update database sesuai kebutuhan
+                    $query = "insert INTO DetailKejadianSlotIOT (KodeNota, Slot, StokAkhir, PrevStok)
+                    SELECT KodeNota, '".$slot."', '".$stok_akhir."', 0 FROM #LastKodeNotaSlotIOT";
+                    echo $query . '<br>';
+    
+                }
+            }
+    
+            // End output buffering and send output
+            ob_end_flush();
+    
+            if($isApproved == 1){
+                $query = "select * from #LastKodeNotaSlotIOT";
+                //$kodenotap4 = $this->opc->query($query)->row();
+                echo "<pre>===Approved===</pre>";
+    
+                echo "<pre>===Insert===</pre>";
+    
+                $queryInsertIsApproved = "insert INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
+                SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, '".$operator."', GETDATE(), NULL, NULL, 1
+                FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d
+                WHERE m.KodeNota=:kodenotaPoint4
+                AND m.KodeNota=d.KodeNota
+                AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)";
+                //$this->opc->query($queryInsertIsApproved);
+                echo $queryInsertIsApproved;
+    
+                echo "<pre>===Update===</pre>";
+    
+                $queryUpdateIsApproved = "update s
+                SET s.StokAkhir=d.StokAkhir, s.Operator='".$operator."', s.TglEntry=GETDATE()
+                FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d, SlotIOT s
+                WHERE m.KodeNota=:kodenotaPoint4
+                AND m.KodeNota=d.KodeNota
+                AND m.NoMesin=s.NoMesin
+                AND d.Slot=s.Slot";
+                //$this->opc->query($queryUpdateIsApproved);
+                echo $queryUpdateIsApproved;
+    
+                $message = "Berhasil Update Slot. *With Approve";
+    
+                
+                $this->session->set_flashdata('message', [
+                    'icon' => 'success',
+                    'title' => 'Success!',
+                    'text' => $message,
+                ]);
+            }
+    
+            else {
+                $message = "Insert Sukses! with no Approve";
+    
+                
+                $this->session->set_flashdata('message', [
+                    'icon' => 'success',
+                    'title' => 'Success!',
+                    'text' => $message,
+                ]);
+            }
+    
+            //die;
+            
+            /*
+            -- 4. simpan Opname Slot IOT - di kanan atas saat detail
+            --dapetin kodenota
+            IF (SELECT OBJECT_ID('tempdb..#LastKodeNotaSlotIOT')) IS NOT NULL DROP TABLE #LastKodeNotaSlotIOT
+            SELECT :branch+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/'+RIGHT('0000000'+CAST(ISNULL((select top 1 CAST(RIGHT(p.KodeNota,7) AS NUMERIC(8,0)) from MasterKejadianSlotIOT p where p.KodeNota like :branch+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/%' order by p.KodeNota desc),1) AS VARCHAR),7) KodeNota
+            INTO #LastKodeNotaSlotIOT
+    
+            --insert master
+            INSERT INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
+            SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), :NoMesin, :Keterangan, :CreateBy, GETDATE(), :Operator, GETDATE(), :IsApproved, :ApprovedBy, :ApprovedDate, :Cabang
+            FROM #LastKodeNotaSlotIOT
+    
+            --untuk isapproved ini akan 1 atau 0 tergantung centangan Approved, dan ApprovedBy dan ApprovedDate akan ada isi kalau dicentang
+    
+            --insert detail, ini di looping sebanyak detail slot nya
+            INSERT INTO DetailKejadianSlotIOT(KodeNota, Slot, StokAkhir, PrevStok)
+            SELECT KodeNota, :Slot, :StokAkhir, 0
+            FROM #LastKodeNotaSlotIOT
+    
+            -- 5. jika centangan approved, dicentang, maka jalankan ini juga
+            INSERT INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
+            SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, :operator, GETDATE(), NULL, NULL, 1
             FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d
             WHERE m.KodeNota=:kodenotaPoint4
-            AND m.KodeNota=d.KodeNota
-            AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)";
-            //$this->opc->query($queryInsertIsApproved);
-            echo $queryInsertIsApproved;
-
-            echo "<pre>===Update===</pre>";
-
-            $queryUpdateIsApproved = "update s
-            SET s.StokAkhir=d.StokAkhir, s.Operator='".$operator."', s.TglEntry=GETDATE()
-            FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d, SlotIOT s
+            AND m.KodeNota=d.KodeNota 
+            AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)
+    
+            UPDATE s
+            SET s.StokAkhir=d.StokAkhir, s.Operator=:operator, s.TglEntry=GETDATE() 
+            FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d, SlotIOT s 
             WHERE m.KodeNota=:kodenotaPoint4
-            AND m.KodeNota=d.KodeNota
-            AND m.NoMesin=s.NoMesin
-            AND d.Slot=s.Slot";
-            //$this->opc->query($queryUpdateIsApproved);
-            echo $queryUpdateIsApproved;
-
-            $message = "Berhasil Update Slot. *With Approve";
-
+            AND m.KodeNota=d.KodeNota 
+            AND m.NoMesin=s.NoMesin 
+            AND d.Slot=s.Slot
+            */
             
+            //Cara 1
+            //$this->session->set_flashdata('message','<div class="alert alert-success" role="alert">New Qty added!</div>');
+            /*
             $this->session->set_flashdata('message', [
                 'icon' => 'success',
-                'title' => 'Success!',
-                'text' => $message,
+                'title' => 'Data Berhasil Masuk!',
+                'text' => 'Data berhasil ditambahkan!',
             ]);
+            */
+            redirect('dashboard');
         }
-
-        else {
-            $message = "Insert Sukses! with no Approve";
-
-            
-            $this->session->set_flashdata('message', [
-                'icon' => 'success',
-                'title' => 'Success!',
-                'text' => $message,
-            ]);
-        }
-
-        //die;
-		
-		/*
-		-- 4. simpan Opname Slot IOT - di kanan atas saat detail
-		--dapetin kodenota
-		IF (SELECT OBJECT_ID('tempdb..#LastKodeNotaSlotIOT')) IS NOT NULL DROP TABLE #LastKodeNotaSlotIOT
-		SELECT :branch+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/'+RIGHT('0000000'+CAST(ISNULL((select top 1 CAST(RIGHT(p.KodeNota,7) AS NUMERIC(8,0)) from MasterKejadianSlotIOT p where p.KodeNota like :branch+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/%' order by p.KodeNota desc),1) AS VARCHAR),7) KodeNota
-		INTO #LastKodeNotaSlotIOT
-
-		--insert master
-		INSERT INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
-		SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), :NoMesin, :Keterangan, :CreateBy, GETDATE(), :Operator, GETDATE(), :IsApproved, :ApprovedBy, :ApprovedDate, :Cabang
-		FROM #LastKodeNotaSlotIOT
-
-		--untuk isapproved ini akan 1 atau 0 tergantung centangan Approved, dan ApprovedBy dan ApprovedDate akan ada isi kalau dicentang
-
-		--insert detail, ini di looping sebanyak detail slot nya
-		INSERT INTO DetailKejadianSlotIOT(KodeNota, Slot, StokAkhir, PrevStok)
-		SELECT KodeNota, :Slot, :StokAkhir, 0
-		FROM #LastKodeNotaSlotIOT
-
-		-- 5. jika centangan approved, dicentang, maka jalankan ini juga
-		INSERT INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
-		SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, :operator, GETDATE(), NULL, NULL, 1
-		FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d
-		WHERE m.KodeNota=:kodenotaPoint4
-		AND m.KodeNota=d.KodeNota 
-		AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)
-
-		UPDATE s
-		SET s.StokAkhir=d.StokAkhir, s.Operator=:operator, s.TglEntry=GETDATE() 
-		FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d, SlotIOT s 
-		WHERE m.KodeNota=:kodenotaPoint4
-		AND m.KodeNota=d.KodeNota 
-		AND m.NoMesin=s.NoMesin 
-		AND d.Slot=s.Slot
-		*/
-		
-		//Cara 1
-		//$this->session->set_flashdata('message','<div class="alert alert-success" role="alert">New Qty added!</div>');
-		/*
-		$this->session->set_flashdata('message', [
-			'icon' => 'success',
-			'title' => 'Data Berhasil Masuk!',
-			'text' => 'Data berhasil ditambahkan!',
-		]);
-		*/
-		redirect('dashboard');
 	}
 
 	public function formatDatabase($cabang){
