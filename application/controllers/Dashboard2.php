@@ -22,10 +22,6 @@ class Dashboard2 extends CI_Controller {
 
         $namaStaff = $arrayDetailVM[0]['NamaStaff'];
 
-        //echo json_encode($arrayDetailVM);
-        //echo $namaStaff;
-        //die;
-
         $cabang = $this->session->userdata('branch_refill_vendingmachine');
 
         $arrayVM = [
@@ -39,26 +35,6 @@ class Dashboard2 extends CI_Controller {
                 'LastPing' => '2024-07-29 11:56:36.760',
                 'StatusVM' => 'OFF',
                 'SelisihJam' => '2376',
-            ],
-            [
-                'Cabang' => $cabang,
-                'NamaCabang' => 'OMEGA KOPERASI',
-                'AlamatHeader' => '12',
-                'KotaHeader' => '',
-                'NoMesin' => 'EMULATOR34X2X2',
-                'LastPing' => '2024-07-29 11:56:36.762',
-                'StatusVM' => 'OFF',
-                'SelisihJam' => '2377',
-            ],
-            [
-                'Cabang' => $cabang,
-                'NamaCabang' => 'OMEGA KOPERASI',
-                'AlamatHeader' => '13',
-                'KotaHeader' => '',
-                'NoMesin' => 'EMULATOR34X2X3',
-                'LastPing' => '2024-07-29 11:56:36.763',
-                'StatusVM' => 'OFF',
-                'SelisihJam' => '2378',
             ],
             */
         ];

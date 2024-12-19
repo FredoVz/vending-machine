@@ -163,7 +163,6 @@ class Detail extends CI_Controller
     
                      // Ambil qty yang sesuai dengan index dari array qty
                     $quantity = isset($qty[$index]) ? $qty[$index] : 0; // Default ke 0 jika qty tidak ada
-                    // Misalnya: $vm['Slot'], $vm['NamaBarang'], $vm['StokAkhir'], etc.
                     
                     // Example:
                     $slot = $vm['Slot'];
@@ -177,13 +176,11 @@ class Detail extends CI_Controller
                         $stok_akhir = $quantity;  // Gantikan stok_akhir dengan qty
                     }
     
-                    //echo "qty: ".$quantity . '<br>';
-    
                     // Lakukan insert/update database sesuai kebutuhan
                     $query = "insert INTO DetailKejadianSlotIOT (KodeNota, Slot, StokAkhir, PrevStok)
                     SELECT KodeNota, '".$slot."', '".$stok_akhir."', 0 FROM #LastKodeNotaSlotIOT";
+
                     echo $query . '<br>';
-    
                 }
             }
     
@@ -193,7 +190,7 @@ class Detail extends CI_Controller
             //-- 5. jika centangan approved, dicentang, maka jalankan ini juga
             if($isApproved == 1){
                 $query = "select * from #LastKodeNotaSlotIOT";
-                //$kodenotap4 = $this->opc->query($query)->row();
+                $kodenotap4 = "this->opc->query($query)->row()";
                 echo "<pre>===Approved===</pre>";
     
                 echo "<pre>===Insert===</pre>";
@@ -201,9 +198,10 @@ class Detail extends CI_Controller
                 $queryInsertIsApproved = "insert INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
                 SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, '".$operator."', GETDATE(), NULL, NULL, 1
                 FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d
-                WHERE m.KodeNota=:kodenotaPoint4
+                WHERE m.KodeNota=$kodenotap4
                 AND m.KodeNota=d.KodeNota
                 AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)";
+
                 //$this->opc->query($queryInsertIsApproved);
                 echo $queryInsertIsApproved;
     
@@ -212,10 +210,11 @@ class Detail extends CI_Controller
                 $queryUpdateIsApproved = "update s
                 SET s.StokAkhir=d.StokAkhir, s.Operator='".$operator."', s.TglEntry=GETDATE()
                 FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d, SlotIOT s
-                WHERE m.KodeNota=:kodenotaPoint4
+                WHERE m.KodeNota=$kodenotap4
                 AND m.KodeNota=d.KodeNota
                 AND m.NoMesin=s.NoMesin
                 AND d.Slot=s.Slot";
+
                 //$this->opc->query($queryUpdateIsApproved);
                 echo $queryUpdateIsApproved;
     
@@ -239,18 +238,7 @@ class Detail extends CI_Controller
                     'text' => $message,
                 ]);
             }
-    
-            //die;
-            
-            //Cara 1
-            //$this->session->set_flashdata('message','<div class="alert alert-success" role="alert">New Qty added!</div>');
-            /*
-            $this->session->set_flashdata('message', [
-                'icon' => 'success',
-                'title' => 'Data Berhasil Masuk!',
-                'text' => 'Data berhasil ditambahkan!',
-            ]);
-            */
+
             redirect('dashboard');
         }
 	}
