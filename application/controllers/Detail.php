@@ -90,9 +90,7 @@ class Detail extends CI_Controller
 	public function add()
 	{
         if ($this->input->post()){
-            echo "<pre>";
-            echo "===TAMPIL DI CONTROLLER===";
-            echo "</pre>";
+            echo "<pre>===TAMPIL DI CONTROLLER===</pre>";
     
             // Ambil data hidden input dari form header
             $branch = $this->session->userdata('branch_refill_vendingmachine');
@@ -105,28 +103,16 @@ class Detail extends CI_Controller
             $qty = $this->input->post('qty'); // qty adalah array, misalnya qty[0], qty[1], ...
     
             // Retrieve the 'details' array from POST data
-            //$details = $this->input->post('details');
-            //$status_aktif = $details[0]['Aktif'];
             $arrayDetailVM = json_decode($this->input->post('arrayDetailVM'), true); // Decode JSON to array
-    
-            //echo $stok_akhir;
-    
-    
+
             // Ambil nilai 'approve' dari form POST
             $isApproved = $this->input->post('approve');
-    
-            //echo $isApproved;
-    
+
             // Format mengikuti database
             $createBy = $this->formatDatabase($cabang);
             $operator = $this->formatDatabase($cabang);
             $approvedBy = $this->formatDatabase($cabang);
-    
-            // Display the array data
-            //echo "<pre>";
-            //print_r($details); // Output the details array for inspection
-            //echo "</pre>";
-    
+            
             //-- 4. simpan Opname Slot IOT - di kanan atas saat detail
             //--dapetin kodenota
             echo "<pre>===Kode Nota===</pre>";
