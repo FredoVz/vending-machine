@@ -127,6 +127,8 @@ class Detail extends CI_Controller
             //print_r($details); // Output the details array for inspection
             //echo "</pre>";
     
+            //-- 4. simpan Opname Slot IOT - di kanan atas saat detail
+            //--dapetin kodenota
             echo "<pre>===Kode Nota===</pre>";
     
             $queryGetKode = "IF (SELECT OBJECT_ID('tempdb..#LastKodeNotaSlotIOT')) IS NOT NULL DROP TABLE #LastKodeNotaSlotIOT
@@ -135,8 +137,10 @@ class Detail extends CI_Controller
     
             echo $queryGetKode;
     
+            //--insert master
             echo "<pre>===Master===</pre>";
     
+            //--untuk isapproved ini akan 1 atau 0 tergantung centangan Approved, dan ApprovedBy dan ApprovedDate akan ada isi kalau dicentang
             if($isApproved == 1) {
                 echo "<pre>===Is Approved===</pre>";
     
@@ -147,6 +151,7 @@ class Detail extends CI_Controller
                 echo $queryInsertMasters;
             }
     
+            //--untuk isapproved ini akan 1 atau 0 tergantung centangan Approved, dan ApprovedBy dan ApprovedDate akan ada isi kalau dicentang
             else if($isApproved == 0){
                 echo "<pre>===Not Approved===</pre>";
     
@@ -160,6 +165,7 @@ class Detail extends CI_Controller
             // Start output buffering
             ob_start();
     
+            //--insert detail, ini di looping sebanyak detail slot nya
             echo "<pre>===Details===</pre>";
     
             // Sample SQL query output for demonstration
@@ -198,6 +204,7 @@ class Detail extends CI_Controller
             // End output buffering and send output
             ob_end_flush();
     
+            //-- 5. jika centangan approved, dicentang, maka jalankan ini juga
             if($isApproved == 1){
                 $query = "select * from #LastKodeNotaSlotIOT";
                 //$kodenotap4 = $this->opc->query($query)->row();
@@ -248,42 +255,6 @@ class Detail extends CI_Controller
             }
     
             //die;
-            
-            /*
-            -- 4. simpan Opname Slot IOT - di kanan atas saat detail
-            --dapetin kodenota
-            IF (SELECT OBJECT_ID('tempdb..#LastKodeNotaSlotIOT')) IS NOT NULL DROP TABLE #LastKodeNotaSlotIOT
-            SELECT :branch+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/'+RIGHT('0000000'+CAST(ISNULL((select top 1 CAST(RIGHT(p.KodeNota,7) AS NUMERIC(8,0)) from MasterKejadianSlotIOT p where p.KodeNota like :branch+'/IOT/'+RIGHT(CAST(DATEPART(YEAR,GETDATE()) AS VARCHAR),2)+RIGHT('00'+CAST(DATEPART(MM,GETDATE()) AS VARCHAR),2)+'/%' order by p.KodeNota desc),1) AS VARCHAR),7) KodeNota
-            INTO #LastKodeNotaSlotIOT
-    
-            --insert master
-            INSERT INTO MasterKejadianSlotIOT(KodeNota, Tgl, NoMesin, Keterangan, CreateBy, CreateDate, Operator, TglEntry, IsApproved, ApprovedBy, ApprovedDate, Cabang)
-            SELECT KodeNota, CAST(FLOOR(CAST(GETDATE() AS FLOAT)) AS DATETIME), :NoMesin, :Keterangan, :CreateBy, GETDATE(), :Operator, GETDATE(), :IsApproved, :ApprovedBy, :ApprovedDate, :Cabang
-            FROM #LastKodeNotaSlotIOT
-    
-            --untuk isapproved ini akan 1 atau 0 tergantung centangan Approved, dan ApprovedBy dan ApprovedDate akan ada isi kalau dicentang
-    
-            --insert detail, ini di looping sebanyak detail slot nya
-            INSERT INTO DetailKejadianSlotIOT(KodeNota, Slot, StokAkhir, PrevStok)
-            SELECT KodeNota, :Slot, :StokAkhir, 0
-            FROM #LastKodeNotaSlotIOT
-    
-            -- 5. jika centangan approved, dicentang, maka jalankan ini juga
-            INSERT INTO SlotIOT(NoMesin, Slot, Staff, Cabang, StokAkhir, Operator, TglEntry, Brg, SlotMerged, Aktif)
-            SELECT m.NoMesin, d.Slot, '', m.Cabang, d.StokAkhir, :operator, GETDATE(), NULL, NULL, 1
-            FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d
-            WHERE m.KodeNota=:kodenotaPoint4
-            AND m.KodeNota=d.KodeNota 
-            AND NOT EXISTS(SELECT * FROM SlotIOT s WHERE m.NoMesin=s.NoMesin AND d.Slot=s.Slot)
-    
-            UPDATE s
-            SET s.StokAkhir=d.StokAkhir, s.Operator=:operator, s.TglEntry=GETDATE() 
-            FROM MasterKejadianSlotIOT m, DetailKejadianSlotIOT d, SlotIOT s 
-            WHERE m.KodeNota=:kodenotaPoint4
-            AND m.KodeNota=d.KodeNota 
-            AND m.NoMesin=s.NoMesin 
-            AND d.Slot=s.Slot
-            */
             
             //Cara 1
             //$this->session->set_flashdata('message','<div class="alert alert-success" role="alert">New Qty added!</div>');
