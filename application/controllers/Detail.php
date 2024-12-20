@@ -18,6 +18,9 @@ class Detail extends CI_Controller
 
 	public function index($noMesin,$namaStaff,$namaCabang)
 	{
+        //Title Dinamis
+        $title = "Vending Machine - Detail";
+        
 		$arrayDetailVM = [
             [
                 'NoMesin' => 'EMULATOR34X2X1',
@@ -76,13 +79,16 @@ class Detail extends CI_Controller
             ],
         ];
 
-        $data['noMesin'] = $noMesin;
-        $data['namaStaff'] = $namaStaff;
-        $data['namaCabang'] = $namaCabang;
-		$data['arrayDetailVM'] = $arrayDetailVM;
+        $data = [
+            'title' => $title,
+            'noMesin' => $noMesin,
+            'namaStaff' => $namaStaff,
+            'namaCabang' => $namaCabang,
+            'arrayDetailVM' => $arrayDetailVM,
+        ];
 
-		$this->load->view('templates/header');
-        $this->load->view('templates/sidebar');
+		$this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
 		$this->load->view('detail', $data);
 		$this->load->view('templates/footer');
 	}

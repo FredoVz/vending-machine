@@ -18,6 +18,9 @@ class Dashboard extends CI_Controller
 
     public function index()
     {
+        //Title Dinamis
+        $title = "Vending Machine - Refill";
+        
         $arrayDetailVM = $this->arrayDetailVM();
 
         $namaStaff = $arrayDetailVM[0]['NamaStaff'];
@@ -58,13 +61,14 @@ class Dashboard extends CI_Controller
         ];
 
         $data = [
+            'title' => $title,
             'arrayVM' => $arrayVM,
             'arrayDetailVM' => $arrayDetailVM,
             'namaStaff' => $namaStaff,
         ];
 
-        $this->load->view('templates/header');
-        $this->load->view('templates/sidebar');
+        $this->load->view('templates/header', $data);
+        $this->load->view('templates/sidebar', $data);
         $this->load->view('dashboard', $data);
         $this->load->view('templates/footer');
     }
