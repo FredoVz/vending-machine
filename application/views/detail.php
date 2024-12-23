@@ -1,6 +1,16 @@
 <div class="container-fluid mt-5">
     <!-- Table to display data -->
     <div class="row justify-content-center">
+		<div class="col-lg-12 align-item-strech mt-5" style=""> <!--margin-top:10%-->
+			<div class="row">
+				<div class="col-lg-12 text-left">
+					<a name="button" class="btn mb-1 btn-dark text-light text-light align-item-center" href="<?= base_url('dashboard') ?>">
+						<img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAABQAAAAUCAYAAACNiR0NAAAACXBIWXMAAAsTAAALEwEAmpwYAAAAkklEQVR4nO3SMQ4BQRSA4a109GqNQiiV7uAAm9BrFTqF3iHUonMEiUu4g0Yk4hOJYYmCzFDtV07xZ97My7LSz6CNTqpYjgOWKWJTD6vY2MyzDXpooY7KN7GRz+yxwxZrLDBHrRi73uIkzrAY7OIYGcxfRx5Ejlx9946TZJ8SYIxzkrUJ0L+NFr/YARpo3g9Kf3MBdiiOTCVGCC4AAAAASUVORK5CYII=" alt="long-arrow-left">
+						Back
+					</a>
+				</div>
+			</div>
+		</div>
         <div class="col-xl-12 col-lg-12 col-md-12">
             <div class="card shadow-lg mb-5 my-5">
                 <div class="flash-data" data-flashdata='<?= json_encode($this->session->flashdata('message')); ?>'></div>

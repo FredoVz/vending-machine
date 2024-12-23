@@ -16,79 +16,32 @@ class Detail extends CI_Controller
         }
     }
 
-	public function index($noMesin,$namaStaff,$namaCabang)
+	//public function index($noMesin,$namaStaff,$namaCabang)
+	public function index()
 	{
-        //Title Dinamis
-        $title = "Vending Machine - Detail";
-        
-		$arrayDetailVM = [
-            [
-                'NoMesin' => 'EMULATOR34X2X1',
-                'Slot' => '1',
-                'StokAkhir' => '7,0000',
-                'NamaOperator' => 'AZIZOMEGASOFT@GMAIL.COM',
-                'TglEntry' => '2024-07-09 11:09:25.133',
-                'NamaStaff' => 'AZIZOMEGASOFT@GMAIL.COM',
-                'NamaCabang' => 'OMEGA KOPERASI',
-                'NamaBarang' => 'Other Beverages2',
-                'Aktif' => '1',
-            ],
-            [
-                'NoMesin' => 'EMULATOR34X2X1',
-                'Slot' => '2',
-                'StokAkhir' => '7,0000',
-                'NamaOperator' => 'AZIZOMEGASOFT@GMAIL.COM',
-                'TglEntry' => '2024-07-09 11:09:25.133',
-                'NamaStaff' => 'AZIZOMEGASOFT@GMAIL.COM',
-                'NamaCabang' => 'OMEGA KOPERASI',
-                'NamaBarang' => 'Other Beverages2',
-                'Aktif' => '1',
-            ],
-            [
-                'NoMesin' => 'EMULATOR34X2X1',
-                'Slot' => '3',
-                'StokAkhir' => '7,0000',
-                'NamaOperator' => 'AZIZOMEGASOFT@GMAIL.COM',
-                'TglEntry' => '2024-07-09 11:09:25.133',
-                'NamaStaff' => 'AZIZOMEGASOFT@GMAIL.COM',
-                'NamaCabang' => 'OMEGA KOPERASI',
-                'NamaBarang' => 'Other Beverages2',
-                'Aktif' => '1',
-            ],
-            [
-                'NoMesin' => 'EMULATOR34X2X1',
-                'Slot' => '1',
-                'StokAkhir' => '7,0000',
-                'NamaOperator' => 'AZIZOMEGASOFT@GMAIL.COM',
-                'TglEntry' => '2024-07-09 11:09:25.133',
-                'NamaStaff' => 'AZIZOMEGASOFT@GMAIL.COM',
-                'NamaCabang' => 'OMEGA KOPERASI',
-                'NamaBarang' => 'Other Beverages2',
-                'Aktif' => '1',
-            ],
-            [
-                'NoMesin' => 'EMULATOR34X2X1',
-                'Slot' => '1',
-                'StokAkhir' => '7,0000',
-                'NamaOperator' => 'AZIZOMEGASOFT@GMAIL.COM',
-                'TglEntry' => '2024-07-09 11:09:25.133',
-                'NamaStaff' => 'AZIZOMEGASOFT@GMAIL.COM',
-                'NamaCabang' => 'OMEGA KOPERASI',
-                'NamaBarang' => 'Other Beverages2',
-                'Aktif' => '1',
-            ],
-        ];
+		//Title Dinamis
+		$title = "Vending Machine - Detail";
+		$cabang = $this->input->post('Cabang');
+		$noMesin = $this->input->post('NoMesin');
+		$namaStaff = $this->input->post('NamaStaff');
+		$namaCabang = $this->input->post('NamaCabang');
 
-        $data = [
-            'title' => $title,
-            'noMesin' => $noMesin,
+		$arrayDetailVM = $this->arrayDetailVM();
+		
+		if(!$this->input->post()){
+			redirect('dashboard'); // Redirect to login page if not logged in
+		}
+
+		$data = [
+			'title' => $title,
+			'noMesin' => $noMesin,
             'namaStaff' => $namaStaff,
             'namaCabang' => $namaCabang,
-            'arrayDetailVM' => $arrayDetailVM,
-        ];
+			'arrayDetailVM' => $arrayDetailVM,
+		];
 
 		$this->load->view('templates/header', $data);
-        $this->load->view('templates/sidebar', $data);
+		$this->load->view('templates/sidebar', $data);
 		$this->load->view('detail', $data);
 		$this->load->view('templates/footer');
 	}
@@ -247,11 +200,78 @@ class Detail extends CI_Controller
 
             redirect('dashboard');
         }
+
+		else {
+			redirect('dashboard');
+		}
 	}
 
 	public function formatDatabase($cabang){
         $format = $cabang . "/01";
 
         return $format;
+    }
+
+	public function arrayDetailVM()
+    {
+        $arrayDetailVM = [
+            [
+                'NoMesin' => 'EMULATOR34X2X1',
+                'Slot' => '1',
+                'StokAkhir' => '7,0000',
+                'NamaOperator' => 'AZIZOMEGASOFT@GMAIL.COM',
+                'TglEntry' => '2024-07-09 11:09:25.133',
+                'NamaStaff' => 'AZIZOMEGASOFT@GMAIL.COM',
+                'NamaCabang' => 'OMEGA KOPERASI',
+                'NamaBarang' => 'Other Beverages2',
+                'Aktif' => '1',
+            ],
+            [
+                'NoMesin' => 'EMULATOR34X2X1',
+                'Slot' => '2',
+                'StokAkhir' => '7,0000',
+                'NamaOperator' => 'AZIZOMEGASOFT@GMAIL.COM',
+                'TglEntry' => '2024-07-09 11:09:25.133',
+                'NamaStaff' => 'AZIZOMEGASOFT@GMAIL.COM',
+                'NamaCabang' => 'OMEGA KOPERASI',
+                'NamaBarang' => 'Other Beverages2',
+                'Aktif' => '1',
+            ],
+            [
+                'NoMesin' => 'EMULATOR34X2X1',
+                'Slot' => '3',
+                'StokAkhir' => '7,0000',
+                'NamaOperator' => 'AZIZOMEGASOFT@GMAIL.COM',
+                'TglEntry' => '2024-07-09 11:09:25.133',
+                'NamaStaff' => 'AZIZOMEGASOFT@GMAIL.COM',
+                'NamaCabang' => 'OMEGA KOPERASI',
+                'NamaBarang' => 'Other Beverages2',
+                'Aktif' => '1',
+            ],
+            [
+                'NoMesin' => 'EMULATOR34X2X1',
+                'Slot' => '1',
+                'StokAkhir' => '7,0000',
+                'NamaOperator' => 'AZIZOMEGASOFT@GMAIL.COM',
+                'TglEntry' => '2024-07-09 11:09:25.133',
+                'NamaStaff' => 'AZIZOMEGASOFT@GMAIL.COM',
+                'NamaCabang' => 'OMEGA KOPERASI',
+                'NamaBarang' => 'Other Beverages2',
+                'Aktif' => '1',
+            ],
+            [
+                'NoMesin' => 'EMULATOR34X2X1',
+                'Slot' => '1',
+                'StokAkhir' => '7,0000',
+                'NamaOperator' => 'AZIZOMEGASOFT@GMAIL.COM',
+                'TglEntry' => '2024-07-09 11:09:25.133',
+                'NamaStaff' => 'AZIZOMEGASOFT@GMAIL.COM',
+                'NamaCabang' => 'OMEGA KOPERASI',
+                'NamaBarang' => 'Other Beverages2',
+                'Aktif' => '1',
+            ],
+        ];
+
+        return $arrayDetailVM;
     }
 }

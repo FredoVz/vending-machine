@@ -66,10 +66,17 @@
                                                 <?php echo $vm['StatusVM']; ?>
                                             </td>
                                             <td scope="row" style="width:25%;">
-                                                <!--a href="< ?= base_url('detail/') . $i ?>" class="btn btn-primary">
-                                                    Detail
-                                                </a-->
-                                                <?php echo anchor('detail/index/'.$vm['NoMesin'].'/'.$arrayDetailVM[0]['NamaStaff'].'/'.$vm['NamaCabang'], '<div class="btn btn-primary">Detail</div>'); ?>
+												<!-- Cara 1
+                                                < ?php echo anchor('detail/index/'.$vm['NoMesin'].'/'.$arrayDetailVM[0]['NamaStaff'].'/'.$vm['NamaCabang'], '<div class="btn btn-primary">Detail</div>'); ?>
+												-->
+												<!-- Cara 2 -->
+												<form action="<?= base_url('detail'); ?>" method="post">
+													<input type="hidden" name="Cabang" value="<?php echo $vm['Cabang']; ?>">
+													<input type="hidden" name="NoMesin" value="<?php echo $vm['NoMesin']; ?>">
+													<input type="hidden" name="NamaStaff" value="<?php echo $arrayDetailVM[0]['NamaStaff']; ?>">
+													<input type="hidden" name="NamaCabang" value="<?php echo $vm['NamaCabang']; ?>">
+													<button class="btn btn-primary">Detail</button>
+												</form>
                                             </td>
                                         </tr>
                                         <?php $i++; // Increment $i ?>
@@ -168,9 +175,27 @@
         var no = offset + 1; // Set nomor urut berdasarkan offset saat ini
 
         paginatedData.forEach(row => {
-            // Outputkan URL detail menggunakan anchor PHP
-            var detailUrl = "<?php echo base_url('detail/index/'); ?>" + row.NoMesin + '/' + dataDetail[0].NamaStaff + '/' + row.NamaCabang;
-            //var detailUrl = "< ?php echo base_url('detail/'); ?>" + no;
+			
+			//Cara 1
+			// Outputkan URL detail menggunakan anchor PHP
+            //var detailUrl = "< ?php echo base_url('detail/index/'); ?>" + row.NoMesin + '/' + dataDetail[0].NamaStaff + '/' + row.NamaCabang;
+			/*
+			<td scope="row" style="width:25%;">
+				<a href="${detailUrl}" class="btn btn-primary">Detail</a>
+			</td>
+			*/
+
+			//Cara 2
+			var detailForm = "";
+			detailForm = `
+                <form action="<?= base_url('detail'); ?>" method="post">
+					<input type="hidden" name="Cabang" value="${row.Cabang}">
+					<input type="hidden" name="NoMesin" value="${row.NoMesin}">
+					<input type="hidden" name="NamaStaff" value="${dataDetail[0].NamaStaff}">
+					<input type="hidden" name="NamaCabang" value="${row.NamaCabang}">
+					<button class="btn btn-primary">Detail</button>
+                </form>
+            `;
 
             $dataBody.append(`
                 <tr>
@@ -178,7 +203,7 @@
                     <td scope="row" style="width:25%;" data-label="NamaCabang">${row.NamaCabang}</td>
                     <td scope="row" style="width:25%;" data-label="NamaStaff">${row.StatusVM}</td>
                     <td scope="row" style="width:25%;">
-                        <a href="${detailUrl}" class="btn btn-primary">Detail</a>
+                        ${detailForm}
                     </td>
                 </tr>
             `);
