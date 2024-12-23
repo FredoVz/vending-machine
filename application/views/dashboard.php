@@ -113,33 +113,6 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"
     integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz"
     crossorigin="anonymous"></script>
-
-<!-- SWEET ALERT -->
-<!--script src="< ?= base_url(); ?>assets/sweetalert2-11.14.5/package/js/sweetalert2.all.min.js"></script-->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-            
-    document.addEventListener('DOMContentLoaded', function() {
-        var flashData = document.querySelector('.flash-data').dataset.flashdata;
-        var confirmButtonText = 'OK';
-
-        //console.log(flashData);
-        
-        if (flashData) {
-            // Parsing data JSON
-            var data = JSON.parse(flashData);
-
-            //console.log(data);
-
-            Swal.fire({
-                icon: data.icon,
-                title: data.title,
-                text: data.text,
-                confirmButtonText: confirmButtonText
-            });
-        }
-    });
-</script>
    
 <!-- JavaScript -->
 <script>
